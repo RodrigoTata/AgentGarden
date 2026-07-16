@@ -12,6 +12,7 @@ The user has asked you to teach them something. This is a stateful request - the
 Treat the current directory as a teaching workspace. The state of their learning is captured in this directory in several files:
 
 - `MISSION.md`: A document capturing the _reason_ the user is interested in the topic. This should be used to ground all teaching. Use the format in [MISSION-FORMAT.md](./MISSION-FORMAT.md).
+- `./learning-records/learning-path.md`: The **central roadmap** of the learning journey. It maps the full arc from "knows nothing" to "mission accomplished" in sequential, prerequisite-gated phases. This is the first document to read when resuming a session, and the first to update when progress is made or direction changes. Use the format in [LEARNING-PATH-FORMAT.md](./LEARNING-PATH-FORMAT.md).
 - `./reference/*.html`: A directory of reference materials. These are the compressed learnings from the lessons - cheat sheets, reference algorithms, syntax, yoga poses, glossaries. They are the raw units of learning. They should be beautiful documents which print out well, and are designed for quick reference.
 - `RESOURCES.md`: A list of resources which can be explored to ground your teaching in contextual knowledge, or to acquire knowledge and wisdom. Use the format in [RESOURCES-FORMAT.md](./RESOURCES-FORMAT.md).
 - `./learning-records/*.md`: A directory of learning records, which capture what the user has learned. These are loosely equivalent to architectural decision records in software development - they capture non-obvious lessons and key insights that may need to be revised later, or drive future sessions. These should be used to calculate the zone of proximal development. They are titled `0001-<dash-case-name>.md`, where the number increments each time. Use the format in [LEARNING-RECORD-FORMAT.md](./LEARNING-RECORD-FORMAT.md).
@@ -78,15 +79,48 @@ Failing to understand the mission will mean knowledge acquisition is not grounde
 
 Missions may change as the user develops more skills and knowledge. This is normal - make sure to update the `MISSION.md` and add a learning record to capture the change. Confirm with the user before changing the mission.
 
+## Learning Path
+
+The learning path (`./learning-records/learning-path.md`) is the **dynamic roadmap** that structures the entire journey from first session to mission completion. It should be created early — ideally after the mission is established and before the first lesson is authored.
+
+### When to create it
+
+Create the learning path as soon as `MISSION.md` is populated and you have enough context to sketch at least 3 phases. If the mission is still vague, establish the mission first.
+
+### What it contains
+
+- **Phases**: Sequential stages of learning, each with a clear objective and prerequisites. Phases gate progress — a learner should not jump to Phase 3 without evidence of Phase 2 mastery.
+- **Lessons per phase**: Each phase contains one or more lessons. Completed lessons link to their HTML files; future lessons describe planned concepts.
+- **Learning Record links**: Each lesson entry tracks which learning records were generated as evidence of comprehension.
+- **Dynamic branches**: Optional lessons that activate based on learner curiosity or situational needs, outside the critical path.
+- **Zone of Proximal Development**: A snapshot section at the bottom that states where the learner is _right now_, what to teach next, and what risk exists if they skip ahead.
+
+### Keeping it alive
+
+- **Update it every session.** After completing a lesson or generating a learning record, update the status symbols and ZPD section immediately.
+- **Never create a lesson that isn't on the path.** If a new lesson idea emerges, add it to the path first, then create the lesson file.
+- **Respect learner redirects.** If the user says "I want to skip this" or "teach me Y instead", update the path to reflect the new direction. Add a learning record documenting the pivot. Prior knowledge claims can unlock phases — record the claim as evidence and mark the phase complete.
+- **Insert phases when gaps appear.** If a session reveals a knowledge gap not covered by existing phases, add a new phase where it logically fits.
+- **Never delete completed phases.** Even if the mission pivots, completed work remains as historical record.
+
+### Relationship to other documents
+
+The learning path reads from `MISSION.md` (destination), `learning-records/` (evidence of mastery), and `NOTES.md` (learner preferences). It drives lesson creation — it is the single source of truth for "what comes next".
+
+Use the format in [LEARNING-PATH-FORMAT.md](./LEARNING-PATH-FORMAT.md).
+
 ## Zone Of Proximal Development
 
 Each lesson, the user should always feel as if they are being challenged 'just enough'.
 
 The user may specify an exact thing they want to learn. If they don't, figure out their zone of proximal development by:
 
-- Reading their `learning-records`
+- Reading the **learning path** (`./learning-records/learning-path.md`) — specifically its ZPD section — to see the current state and recommended next step
+- Reading their `learning-records` for evidence of what they truly understand
 - Figuring out the right thing to teach them based on their mission
 - Teach the most relevant thing that fits in their zone of proximal development
+
+After each session, update the ZPD section at the bottom of the learning path to reflect the new state.
 
 ## Knowledge
 
