@@ -13,6 +13,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 ```
 .agents/
 └── skills/
+    ├── bpmn-diagram/
     ├── code-review/
     ├── codebase-design/
     ├── context-compactor/
@@ -28,9 +29,10 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── prepare-for-commit/
     ├── tdd/
     ├── teach/
-    ├── to-issues/
-    ├── to-prd/
     ├── to-qa/
+    ├── to-spec/
+    ├── to-tickets/
+    ├── wayfinder/
     └── writing-great-skills/
 ```
 
@@ -38,6 +40,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 
 | Skill | Descripción |
 |---|---|
+| **bpmn-diagram** | Generación de diagramas de procesos de negocio BPMN 2.0 en HTML interactivo con bpmn-js (Camunda ref). |
 | **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
@@ -53,9 +56,10 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
-| **to-issues** | Transformación de requerimientos en tareas e issues accionables. |
-| **to-prd** | Elaboración de Documentos de Requerimientos de Producto (PRD). |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
+| **to-spec** | Transformación de requerimientos o ideas en especificaciones técnicas detalladas (PRD/Spec). |
+| **to-tickets** | Desglose de especificaciones en tareas, tickets e issues accionables. |
+| **wayfinder** | Mapeo y gestión de iniciativas complejas divididas en mapas de tickets de decisión. |
 | **writing-great-skills** | Guía de buenas prácticas para redactar y empaquetar nuevas habilidades. |
 
 ---
