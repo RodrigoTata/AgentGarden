@@ -5,7 +5,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 ## Características Clave
 
 - **Estandarización de Skills**: Estructura homogénea basada en `SKILL.md` con metadatos en YAML frontmatter e instrucciones técnicas.
-- **Flujos de Trabajo Especializados**: Habilidades enfocadas en arquitectura, revisión de código, TDD, depuración, seguridad y documentación.
+- **Flujos de Trabajo Especializados**: Habilidades enfocadas en arquitectura, revisión de código, TDD, depuración, formateo de repositorios, seguridad y documentación.
 - **Portabilidad de Reglas**: Estructura compatible con el directorio `.agents/skills/` en la raíz de cualquier repositorio.
 
 ## Estructura del Proyecto
@@ -27,6 +27,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── grill-with-docs/
     ├── improve-codebase-architecture/
     ├── prepare-for-commit/
+    ├── repo-format/
     ├── tdd/
     ├── teach/
     ├── to-qa/
@@ -54,6 +55,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
+| **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
