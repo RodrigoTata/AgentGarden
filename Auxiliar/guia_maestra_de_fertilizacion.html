@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Maestro de Riego y Fertilización — Cannabis para Rosin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @page {
+            size: A4 portrait;
+            margin: 1.5cm;
+        }
+
+        @media print {
+            body { background: white !important; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none !important; }
+            .document {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a2e;
+            line-height: 1.6;
+            font-size: 13.5px;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .print-btn:hover { 
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #1b5e20, #0d3b0e);
+        }
+
+        .document {
+            max-width: 210mm;
+            margin: 30px auto;
+            background: white;
+            padding: 50px 45px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            border-radius: 6px;
+        }
+
+        /* Header */
+        .doc-header {
+            border-bottom: 3px solid #2e7d32;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .doc-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+        .doc-header .subtitle {
+            font-size: 14px;
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .doc-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 12px;
+            color: #555;
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .doc-meta span { display: block; }
+        .doc-meta strong { color: #1a1a2e; }
+
+        /* Headings */
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e8e8ee;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        p { margin-bottom: 10px; }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            text-align: center;
+        }
+        th {
+            background: #1b5e20;
+            color: white;
+            padding: 8px 5px;
+            font-weight: 600;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border: 1px solid #144718;
+        }
+        td {
+            padding: 7px 4px;
+            border: 1px solid #e0e0e0;
+        }
+        tr:nth-child(even) td { background: #f9fbf9; }
+        tr:hover td { background: #f0f7f0; }
+        
+        .highlight-col {
+            background: #e8f5e9 !important;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        .peak-row {
+            background: #fff3e0 !important;
+        }
+        .peak-row td {
+            border-top: 2px solid #fb8c00;
+            border-bottom: 2px solid #fb8c00;
+        }
+
+        /* Callout boxes */
+        .callout {
+            background: #f0f7f0;
+            border-left: 4px solid #2e7d32;
+            padding: 12px 16px;
+            margin: 14px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 12.5px;
+        }
+        .callout.warning {
+            background: #fff8f0;
+            border-left-color: #f0a030;
+        }
+        .callout.success {
+            background: #f0fff4;
+            border-left-color: #38a169;
+        }
+        .callout strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #1a1a2e;
+        }
+
+        /* Flowchart Styles */
+        .flowchart-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #2e7d32;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            transition: transform 0.15s ease-in-out;
+        }
+        .flow-step.critical {
+            border-left-color: #e65100;
+            background: #fff8f5;
+        }
+        .flow-step.final-step {
+            border-left-color: #c62828;
+            background: #ffebee;
+        }
+        .flow-step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #2e7d32;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .flow-step.critical .flow-step-number {
+            background: #e65100;
+        }
+        .flow-step.final-step .flow-step-number {
+            background: #c62828;
+        }
+        .flow-step-body {
+            flex: 1;
+        }
+        .flow-step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .flow-step-title {
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #1a1a2e;
+        }
+        .flow-step-desc {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.45;
+        }
+        .flow-arrow {
+            text-align: center;
+            color: #2e7d32;
+            font-size: 16px;
+            font-weight: 800;
+            margin: -4px 0;
+        }
+
+        /* Grid Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 14px 0;
+        }
+        .card {
+            border: 1px solid #e0e0ee;
+            border-radius: 8px;
+            padding: 14px;
+            background: #fafafa;
+        }
+        .card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 6px;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 2px solid #e8e8ee;
+            font-size: 11px;
+            color: #777;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-green { background: #c8e6c9; color: #1b5e20; }
+        .badge-orange { background: #ffe0b2; color: #e65100; }
+        .badge-red { background: #ffcdd2; color: #b71c1c; }
+        .badge-blue { background: #bbdefb; color: #0d47a1; }
+    </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">📄 Guardar como PDF</button>
+
+<div class="document">
+
+    <!-- HEADER -->
+    <div class="doc-header">
+        <h1>🌱 Plan Maestro de Riego y Fertilización</h1>
+        <div class="subtitle">Cultivo de Cannabis para Extracción de Rosin & Formulation de Cartridges</div>
+        <div class="doc-meta">
+            <span><strong>Fecha:</strong> 2026-07-26</span>
+            <span><strong>Ubicación:</strong> Antofagasta, Chile (Clima Costero / Desértico)</span>
+            <span><strong>Genética Objetivo:</strong> Channel + (Alto Ratio Cáliz-Hoja)</span>
+            <span><strong>Sustrato:</strong> Reutilizado + Compost + 20% Perlita (18L)</span>
+        </div>
+    </div>
+
+    <!-- 1. FICHA TÉCNICA -->
+    <h2>1. Ficha Técnica y Configuración del Cultivo</h2>
+    <p>Este plan está diseñado para optimizar el rendimiento de terpenos y tricomas glandulares limpios, reduciendo al mínimo la clorofila y sales metálicas residuales.</p>
+
+    <div class="grid-2">
+        <div class="card">
+            <h4>🪴 Sustrato y Enmiendas (18 Litros)</h4>
+            <p><strong>Base:</strong> Sustrato reutilizado + Compost fresco + 20% Perlita.</p>
+            <p><strong>MYCO PRO Microgranular (5g):</strong> Aplicado en el hoyo de trasplante en contacto directo con las raíces.</p>
+            <p><strong>Tierra de Diatomeas:</strong> Mezclada en la tierra para silicio pasivo y control de plagas del suelo.</p>
+        </div>
+        <div class="card">
+            <h4>💧 Agua Base y Estructura de Luz</h4>
+            <p><strong>Agua Base:</strong> Desaladora (EC ~0.0 mS/cm) + Seachem Prime + CalMag.</p>
+            <p><strong>Veg (Sem 1-7):</strong> Requiere apoyo de luz nocturna (16-18h totales) para evitar floración prematura en invierno.</p>
+            <p><strong>Flora (Sem 8-14):</strong> Fotoperiodo natural de invierno (~11h sol directo).</p>
+        </div>
+    </div>
+
+    <!-- 2. TABLA NUTRICIONAL -->
+    <div class="page-break"></div>
+    <h2>2. Tabla Semanal de Nutrición (Semanas 1 a 14)</h2>
+    <p>Dosis expresadas estrictamente en <strong>mililitros por litro de agua (ml/L)</strong>.</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sem</th>
+                    <th>Fase del Cultivo</th>
+                    <th>Prime</th>
+                    <th>Top Barrier</th>
+                    <th>CalMag</th>
+                    <th>Bio Rhizotonic</th>
+                    <th>Cannazym</th>
+                    <th>Top Veg</th>
+                    <th>Green Explosion</th>
+                    <th>Top Bloom</th>
+                    <th>Top Candy</th>
+                    <th>PK 13/14</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>Plántula / Germinación</td>
+                    <td>1-2 gts</td>
+                    <td>—</td>
+                    <td>0.5 ml</td>
+                    <td>2.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>Plántula (Raíz Inicial)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5 ml</td>
+                    <td>0.8 ml</td>
+                    <td>2.0-4.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>1.0 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr style="background: #eef7ee;">
+                    <td><strong>3</strong></td>
+                    <td><strong>Trasplante 18L (Myco Pro)</strong></td>
+                    <td>1-2 gts</td>
+                    <td>0.5 ml</td>
+                    <td>1.0 ml</td>
+                    <td>4.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>1.5-2.0 ml</td>
+                    <td><span class="badge badge-green">2.0 ml Foliar</span></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td>Vegetativo 1 (Apoyo Luz)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5-1.0 ml</td>
+                    <td>1.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>2.0-3.0 ml</td>
+                    <td><span class="badge badge-blue">2.0 ml Riego</span></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>5</strong></td>
+                    <td>Vegetativo 2 (Apoyo Luz)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5-1.0 ml</td>
+                    <td>1.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>2.5-3.0 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>6</strong></td>
+                    <td>Vegetativo 3 (Apoyo Luz)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5-1.0 ml</td>
+                    <td>1.0 ml</td>
+                    <td>1.0-2.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>3.0 ml</td>
+                    <td><span class="badge badge-blue">2.0 ml Riego</span></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>7</strong></td>
+                    <td>Vegetativo 4 (Poda/LST)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5-1.0 ml</td>
+                    <td>1.0 ml</td>
+                    <td>1.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>2.0-3.0 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>8</strong></td>
+                    <td>Pre-Flora / Estirón (Sin Luz)</td>
+                    <td>1-2 gts</td>
+                    <td>0.5 ml</td>
+                    <td>1.2 ml</td>
+                    <td>1.0 ml</td>
+                    <td>2.5 ml</td>
+                    <td>2.0 ml</td>
+                    <td>—</td>
+                    <td>1.5 ml</td>
+                    <td>1.0 ml</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>9</strong></td>
+                    <td>Estirón / Primeros Botones</td>
+                    <td>1-2 gts</td>
+                    <td>0.5 ml</td>
+                    <td>1.2 ml</td>
+                    <td><em>Suspender</em></td>
+                    <td>2.5 ml</td>
+                    <td>1.0 ml</td>
+                    <td>—</td>
+                    <td>2.0-3.0 ml</td>
+                    <td>1.5-2.0 ml</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>10</strong></td>
+                    <td>Floración Media (Formación)</td>
+                    <td>1-2 gts</td>
+                    <td><em>Suspender</em></td>
+                    <td>1.2 ml</td>
+                    <td>—</td>
+                    <td>2.5 ml</td>
+                    <td><em>Suspender</em></td>
+                    <td>—</td>
+                    <td>3.0-4.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>11</strong></td>
+                    <td>Floración Media (Engorde)</td>
+                    <td>1-2 gts</td>
+                    <td>—</td>
+                    <td>1.2 ml</td>
+                    <td>—</td>
+                    <td>2.5 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>3.0-4.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td>—</td>
+                </tr>
+                <tr class="peak-row">
+                    <td><strong>12</strong></td>
+                    <td><strong>Peak Engorde (Canna PK)</strong></td>
+                    <td>1-2 gts</td>
+                    <td>—</td>
+                    <td>1.2 ml</td>
+                    <td>—</td>
+                    <td>2.5 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>2.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td class="highlight-col">1.5 ml</td>
+                </tr>
+                <tr>
+                    <td><strong>13</strong></td>
+                    <td>Maduración / Cierre</td>
+                    <td>1-2 gts</td>
+                    <td>—</td>
+                    <td>1.0 ml</td>
+                    <td>—</td>
+                    <td>2.5 ml</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>1.5-2.0 ml</td>
+                    <td>2.0 ml</td>
+                    <td><em>Suspender</em></td>
+                </tr>
+                <tr style="background: #ffebee;">
+                    <td><strong>14</strong></td>
+                    <td><strong>Lavado Express 7 Días</strong></td>
+                    <td>1-2 gts</td>
+                    <td>—</td>
+                    <td><em>Suspender</em></td>
+                    <td>—</td>
+                    <td><em>Suspender</em></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><em>Suspender</em></td>
+                    <td><em>Suspender</em></td>
+                    <td>—</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="callout success">
+        <strong>💡 Apoyo Orgánico Extra (Jugo de Lentejas):</strong>
+        Puedes sustituir el Bio Rhizotonic por un riego de jugo de lentejas filtrado (rico en auxinas orgánicas) en las semanas 2, 4 y 6.
+    </div>
+
+    <!-- 3. PROTOCOLO DE MEZCLA -->
+    <h2>3. Protocolo Obligatorio de Mezcla en Balde (Con Silicio)</h2>
+    <p>El silicio (<strong>Top Barrier</strong>) es sumamente alcalino. Si entra en contacto directo con fertilizante concentrado o CalMag sin diluir, causará <strong>precipitación química</strong> (grumos blancos) bloqueando las raíces.</p>
+
+    <div class="flowchart-container">
+        
+        <!-- Step 1 -->
+        <div class="flow-step">
+            <div class="flow-step-number">1</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">Agua Desaladora + Seachem Prime</span>
+                    <span class="badge badge-green">Acondicionamiento</span>
+                </div>
+                <div class="flow-step-desc">
+                    Agregar 1-2 gotas de Prime por cada litro de agua pura desalada. <strong>Dejar reposar 2 minutos</strong> para neutralizar el cloro y las cloraminas.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 2 -->
+        <div class="flow-step critical">
+            <div class="flow-step-number">2</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">TOP BARRIER (Silicato de Potasio)</span>
+                    <span class="badge badge-orange">Paso Crítico de Silicio</span>
+                </div>
+                <div class="flow-step-desc">
+                    <strong>¡Mezclar muy bien en el agua sola antes de añadir cualquier sal!</strong> El silicio debe quedar 100% diluido para evitar que reaccione con el CalMag y precipite.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 3 -->
+        <div class="flow-step">
+            <div class="flow-step-number">3</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">CalMag (Top Crop)</span>
+                    <span class="badge badge-blue">Base Estructural</span>
+                </div>
+                <div class="flow-step-desc">
+                    Inyectar la base de Calcio y Magnesio para dar conductividad eléctrica (EC) y estructura al agua desalada. Mezclar enérgicamente.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 4 -->
+        <div class="flow-step">
+            <div class="flow-step-number">4</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">Bases Nutritivas (Top Veg / Top Bloom)</span>
+                    <span class="badge badge-green">NPK Base</span>
+                </div>
+                <div class="flow-step-desc">
+                    Agregar el abono base según corresponda a la semana de desarrollo (Top Veg en vegetativo / Top Bloom en floración).
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 5 -->
+        <div class="flow-step">
+            <div class="flow-step-number">5</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">Carbohidratos (Top Candy)</span>
+                    <span class="badge badge-green">Alimento Microbiano</span>
+                </div>
+                <div class="flow-step-desc">
+                    Añadir azúcares y materia orgánica para alimentar las micorrizas (MYCO PRO) del sustrato.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 6 -->
+        <div class="flow-step">
+            <div class="flow-step-number">6</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">Enzimas y Estimulantes (Cannazym y/o Bio Rhizotonic)</span>
+                    <span class="badge badge-blue">Protección Enzimática</span>
+                </div>
+                <div class="flow-step-desc">
+                    Las enzimas vivas y las algas se disuelven al final, cuando los fertilizantes ya están diluidos y el medio es seguro.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <!-- Step 7 -->
+        <div class="flow-step final-step">
+            <div class="flow-step-number">7</div>
+            <div class="flow-step-body">
+                <div class="flow-step-header">
+                    <span class="flow-step-title">CANNA PK 13/14 (Exclusivo Semana 12)</span>
+                    <span class="badge badge-red">¡Siempre al Final!</span>
+                </div>
+                <div class="flow-step-desc">
+                    Mineral puro de alto impacto. <strong>Se añade únicamente durante la Semana 12</strong>. Al entrar al balde ya acondicionado, sus sales solubles no afectarán las enzimas ni precipitarán.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 4. ALTERNANCIA Y PAUTAS -->
+    <h2>4. Esquema de Riego y Pautas Clave</h2>
+
+    <h3>Esquema de Alternancia (Maceteros 18L)</h3>
+    <ul>
+        <li><strong>Riego A (Nutrición):</strong> Caldo completo según la tabla correspondiente a la semana.</li>
+        <li><strong>Riego B (Mantenimiento):</strong> Solo Agua desaladora + Seachem Prime + Top Barrier (en veg) + CalMag + Cannazym.</li>
+    </ul>
+
+    <div class="callout warning">
+        <strong>⚠️ Regla del Silicio (Top Barrier):</strong>
+        El silicio debe suspenderse obligatoriamente al entrar a la floración media (Semana 10). En este punto, la pared celular de la planta está totalmente formada y no queremos acumulación mineral innecesaria en las flores.
+    </div>
+
+    <h3>Protocolo de Disparo de Engorde: Canna PK 13/14 (Semana 12)</h3>
+    <p>El PK 13/14 es mineral puro de grado farmacéutico. Se aplica durante <strong>únicamente 1 semana</strong> (2 a 3 riegos máximo). Esto inyecta Fósforo y Potasio en la ventana hormonal exacta donde la planta multiplica sus cálices, evitando la salinización del sustrato.</p>
+
+    <h3>Lavado Express de Raíces (Semana 14)</h3>
+    <ul>
+        <li><strong>Día 1:</strong> Riego abundante con Agua desaladora + Seachem Prime (lograr un 30% de drenaje).</li>
+        <li><strong>Día 3 o 4:</strong> Riego suave de apoyo si el macetero se siente ligero.</li>
+        <li><strong>Días 5 a 7:</strong> Estrés hídrico final (sin riego). La planta metaboliza su propia clorofila, garantizando un Rosin rubio y transparente.</li>
+    </ul>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+        <p>Plan Nutricional Optimizado para Antofagasta — Extracción de Rosin de Alta Pureza</p>
+        <p>© 2026 Guía Maestra de Fertilización — Documento de Referencia para Imprimir o Guardar en PDF</p>
+    </div>
+
+</div>
+
+</body>
+</html>
