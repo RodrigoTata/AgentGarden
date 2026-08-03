@@ -23,6 +23,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── diagnosing-bugs/
     ├── domain-modeling/
     ├── entity-diagram-analysis/
+    ├── execute/
     ├── grill-me-rg/
     ├── grill-with-docs/
     ├── improve-codebase-architecture/
@@ -51,6 +52,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 | **diagnosing-bugs** | Ciclo sistemático de diagnóstico para fallas complejas y degradación de rendimiento. |
 | **domain-modeling** | Definición del modelo de dominio, lenguaje ubicuo y decisiones de arquitectura (ADRs). |
 | **entity-diagram-analysis** | Análisis de diagramas de entidades y relaciones. |
+| **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana. |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
