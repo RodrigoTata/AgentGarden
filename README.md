@@ -24,10 +24,12 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── domain-modeling/
     ├── entity-diagram-analysis/
     ├── execute/
+    ├── frontend-analysis/
     ├── grill-me-rg/
     ├── grill-with-docs/
     ├── improve-codebase-architecture/
     ├── prepare-for-commit/
+    ├── quotation-for/
     ├── repo-format/
     ├── tdd/
     ├── teach/
@@ -35,6 +37,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── to-spec/
     ├── to-tickets/
     ├── wayfinder/
+    ├── web-audit/
     └── writing-great-skills/
 ```
 
@@ -48,15 +51,17 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
 | **cyber-audit** | Auditorías de seguridad y listas de verificación de vulnerabilidades. |
 | **debug** | Triaje y diagnóstico de errores reportados en lenguaje natural. |
-| **devsecops-review** | Verificaciones de seguridad DevSecOps y reporte en formato HTML. |
+| **devsecops-review** | Verificaciones de seguridad DevSecOps y reporte en formato HTML + Markdown. |
 | **diagnosing-bugs** | Ciclo sistemático de diagnóstico para fallas complejas y degradación de rendimiento. |
 | **domain-modeling** | Definición del modelo de dominio, lenguaje ubicuo y decisiones de arquitectura (ADRs). |
 | **entity-diagram-analysis** | Análisis de diagramas de entidades y relaciones. |
-| **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana. |
+| **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
+| **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
+| **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile). |
 | **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
@@ -64,6 +69,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 | **to-spec** | Transformación de requerimientos o ideas en especificaciones técnicas detalladas (PRD/Spec). |
 | **to-tickets** | Desglose de especificaciones en tareas, tickets e issues accionables. |
 | **wayfinder** | Mapeo y gestión de iniciativas complejas divididas en mapas de tickets de decisión. |
+| **web-audit** | Auditoría y análisis completo de sitios web. |
 | **writing-great-skills** | Guía de buenas prácticas para redactar y empaquetar nuevas habilidades. |
 
 ---

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # DevSecOps Review
 
-Surface architectural friction **and** security exposure in a single pass, then present both as **deepening opportunities** in a visual HTML report. Every finding is framed in terms of **depth**, **seams**, **locality**, and **leverage** — security flaws are shallow modules by another name.
+Surface architectural friction **and** security exposure in a single pass, then present both as **deepening opportunities** en un reporte visual HTML y también como un **artefacto Markdown persistente**. Every finding is framed in terms of **depth**, **seams**, **locality**, and **leverage** — security flaws are shallow modules by another name.
 
 This skill is _informed_ by the project's domain model and built on a shared design vocabulary:
 
@@ -40,49 +40,36 @@ Translate every security finding into architectural language: scattered authoriz
 
 ---
 
-### 2. Present candidates as an HTML report
+### 2. Present candidates as HTML and Markdown reports
 
-Write a self-contained HTML file to the OS temp directory (`%TEMP%` on Windows, `$TMPDIR` or `/tmp` otherwise) as `devsecops-review-<timestamp>.html`. Open it for the user and tell them the absolute path.
+Debe presentarse el resultado de la auditoría en dos formatos simultáneamente:
 
-See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
-
-For each candidate, render a card with:
+**A. Markdown Artifact:**
+Crea un artifact en formato Markdown (ej. `devsecops-review.md`). Por cada candidato encontrado, detalla:
 - **Files** — which files/modules are involved
 - **Problem** — why the current structure causes friction or exposure
 - **Solution** — plain English description of what would change
 - **Benefits** — explained in terms of locality, leverage, and how tests or security posture improve
-- **Before / After diagram** — side-by-side, illustrating the shallowness and the deepening
-- **Recommendation strength** — `Strong`, `Worth exploring`, or `Speculative` as a badge
-- **Severity badge** (security cards only) — `🔴`, `🟡`, or `🔵`
+- **Recommendation strength** — `Strong`, `Worth exploring`, or `Speculative`
+- **Severity** (security cards only) — `🔴`, `🟡`, or `🔵`
 
-Security cards additionally include: OWASP category, exploitation path, and remediation as deepening.
+**B. Interactive HTML Report:**
+Write a self-contained HTML file to the OS temp directory (`%TEMP%` on Windows, `$TMPDIR` or `/tmp` otherwise) as `devsecops-review-<timestamp>.html`. Open it for the user and tell them the absolute path. See [HTML-REPORT.md](HTML-REPORT.md) for the HTML scaffold and styling guidance. Render the same candidate data visually, añadiendo **Diagramas Antes/Después**.
 
-End the report with a **Top recommendation** section: which candidate to tackle first and why.
+Finaliza ambos reportes con la sección **Top recommendation**: cuál candidato atacar primero y por qué.
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting. Mark it clearly with a warning callout.
 
 > [!CAUTION]
 > If `🔴 CRITICAL` security findings exist, flag them prominently and recommend fixing before any architectural work.
 
-Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
+Do NOT propose interfaces yet. After the files are written, ask the user: "Which of these would you like to explore?"
 
-**Completion criterion**: An HTML file written to temp, opened in the OS browser, containing every candidate from Step 1 with before/after diagrams and severity/strength badges.
-
----
-
-### 3. Generate human security testing plan
-
-Produce `security_human_plan.md` for browser-based testing that the agent cannot perform. Each scenario uses a step/action/expected-result table:
-
-- **Access Control Bypass** — navigate to admin URLs as a standard user; curl admin endpoints with a USER JWT.
-- **Injection Attempts** — XSS payloads in text fields, SQL injection in search, overflow in numeric inputs.
-- **Session Security** — expired JWT returns 401, logout invalidates token, no sensitive data in localStorage or Network tab.
-
-**Completion criterion**: A saved `security_human_plan.md` artifact with ≥3 scenarios, each containing a step/action/expected-result table and a sign-off checklist.
+**Completion criterion**: Un artefacto Markdown (`devsecops-review.md`) ha sido generado, y además un archivo HTML ha sido creado en el directorio temporal y abierto en el navegador. Ambos contienen los candidatos del Paso 1.
 
 ---
 
-### 4. Grilling loop
+### 3. Grilling loop
 
 Once the user picks a candidate, run the `/grilling` skill to walk the design tree — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
 
@@ -100,5 +87,5 @@ Side effects happen inline as decisions crystallize:
 
 - **Zero Trust**: Assume all client-side validation can be bypassed. If the backend doesn't check the role, it's a vulnerability.
 - **Traceability**: Every finding points to a specific file and line.
-- **No Browser**: Agent checks are static only. Browser security testing is the human's job (Step 3).
+- **Agent Checks Are Static**: Focus strictly on codebase analysis and static vulnerability detection.
 - **Domain fidelity**: Use `CONTEXT.md` vocabulary for the domain, `/codebase-design` vocabulary for the architecture. Never substitute.

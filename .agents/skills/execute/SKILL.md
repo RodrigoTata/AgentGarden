@@ -27,3 +27,16 @@ Work the ticket frontier. For every ticket whose blockers are resolved, apply th
 Once the board is clear and all implementations are finished, apply the `to-qa` skill.
 Run the automated QA checks and prepare the human testing plan. 
 *Completion criterion*: The `qa_agent_report.md` and `qa_human_plan.md` artifacts are generated, and you explicitly stop to present the final outcome to the user for human review.
+
+### 4. Logging (`execute-log`)
+
+Before presenting the final outcome to the user for human review, you **MUST** log the execution details.
+Append a new entry to the log file located at `c:\dev\AgentGarden\Logs\execute-log.md`. If the directory or file does not exist, create it.
+The log entry must include:
+- Date and time
+- Project reference (the workspace/repository you were working on)
+- Complexity (a brief assessment of the implementation complexity)
+- Execution time (approximate duration of the `/execute` process)
+- Tokens spent (approximate input and output tokens used during the execution)
+
+You can use the PowerShell `Add-Content` command or similar to append to the file efficiently.
