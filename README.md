@@ -13,6 +13,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 ```
 .agents/
 └── skills/
+    ├── agile-prototype/
     ├── bpmn-diagram/
     ├── code-review/
     ├── codebase-design/
@@ -45,6 +46,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 
 | Skill | Descripción |
 |---|---|
+| **agile-prototype** | Planificación y ejecución ágil de iteraciones de prototipos (MKI, MKII) para hardware o software. |
 | **bpmn-diagram** | Generación de diagramas de procesos de negocio BPMN 2.0 en HTML interactivo con bpmn-js (Camunda ref). |
 | **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
