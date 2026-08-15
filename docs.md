@@ -19,8 +19,10 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 
 ## Estructura de Directorios
 
-- `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles en el repositorio.
+- `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.
 - `.agents/skills/<skill-name>/SKILL.md`: Punto de entrada interpretado por el agente para ejecutar el flujo de trabajo.
+- `skills-to-review/`: Directorio de incubación y revisión preliminar para nuevas habilidades antes de su incorporación a `.agents/skills/`.
+
 
 ---
 

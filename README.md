@@ -40,7 +40,19 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── wayfinder/
     ├── web-audit/
     └── writing-great-skills/
+skills-to-review/
+├── ask-matt/
+├── cotizador-casas/
+└── teach/
 ```
+
+## Habilidades en Revisión (Skills to Review)
+
+| Skill | Descripción |
+|---|---|
+| **cotizador-casas** | Valuación y cotización de propiedades residenciales — benchmarking de mercado, amortización hipotecaria cuota a cuota y generación de reporte HTML interactivo. |
+| **ask-matt** | Entrevista y asesoría especializada basada en perfiles y criterios expertos. |
+
 
 ## Habilidades Disponibles (Skills)
 
