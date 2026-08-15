@@ -50,8 +50,9 @@ skills-to-review/
 
 | Skill | Descripción |
 |---|---|
-| **cotizador-casas** | Valuación y cotización de propiedades residenciales — benchmarking de mercado, amortización hipotecaria cuota a cuota y generación de reporte HTML interactivo. |
+| **cotizador-casas** | Valuación y cotización inmobiliaria residencial — análisis de entorno e isócronas (10/20m pie, 5/15/30m auto, metro), amortización hipotecaria cuota a cuota, Scorecard 0-10 y reporte HTML. |
 | **ask-matt** | Entrevista y asesoría especializada basada en perfiles y criterios expertos. |
+
 
 
 ## Habilidades Disponibles (Skills)
