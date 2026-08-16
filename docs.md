@@ -17,6 +17,14 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - Las habilidades estructuran su proceso mediante pasos numerados claros, definiendo un **Criterio de finalización** (*Completion criterion*) para cada etapa.
 - Se implementan barreras de protección (*Guardrails*) para prevenir acciones destructivas o cambios no autorizados.
 
+### 3. Dualidad de Ejecución (Orquestación vs. Standalone)
+- Las habilidades de evaluación compleja (`cotizador-departamentos`, `cotizador-casas`) admiten dos modalidades operacionales:
+  - **Modo Orquestación**: Delegan la prospección en `/research` y la maquetación visual en `/generate-html-doc`.
+  - **Modo Standalone**: Ejecutan consultas web directas, validaciones financieras y ensamblado HTML inline de forma 100% autónoma.
+
+### 4. Integridad y Verificación Activa de Enlaces
+- Protocolo de validación técnica en tiempo real mediante consultas HTTP (`200 OK`) previo a la consolidación de reportes, previniendo redirecciones canónicas a buscadores o pantallas de error 404.
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.

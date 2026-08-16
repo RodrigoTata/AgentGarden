@@ -43,6 +43,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 skills-to-review/
 ├── ask-matt/
 ├── cotizador-casas/
+├── cotizador-departamentos/
 └── teach/
 ```
 
@@ -50,6 +51,7 @@ skills-to-review/
 
 | Skill | Descripción |
 |---|---|
+| **cotizador-departamentos** | Búsqueda, auditoría y cotización de departamentos residenciales con enlaces 100% verificados (HTTP 200), isócronas urbanas (10/20m pie, 5/15/30m auto, metro), amortización cuota a cuota en UF y CLP, Scorecard 0-10 y reporte HTML. |
 | **cotizador-casas** | Valuación y cotización inmobiliaria residencial — análisis de entorno e isócronas (10/20m pie, 5/15/30m auto, metro), amortización hipotecaria cuota a cuota, Scorecard 0-10 y reporte HTML. |
 | **ask-matt** | Entrevista y asesoría especializada basada en perfiles y criterios expertos. |
 
