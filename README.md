@@ -15,6 +15,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 └── skills/
     ├── agile-prototype/
     ├── bpmn-diagram/
+    ├── business-implementation-plan/
     ├── code-review/
     ├── codebase-design/
     ├── context-compactor/
@@ -26,12 +27,15 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── entity-diagram-analysis/
     ├── execute/
     ├── frontend-analysis/
+    ├── generate-html-doc/
     ├── grill-me-rg/
     ├── grill-with-docs/
+    ├── handoff/
     ├── improve-codebase-architecture/
     ├── prepare-for-commit/
     ├── quotation-for/
     ├── repo-format/
+    ├── research/
     ├── tdd/
     ├── teach/
     ├── to-qa/
@@ -63,6 +67,7 @@ skills-to-review/
 |---|---|
 | **agile-prototype** | Planificación y ejecución ágil de iteraciones de prototipos (MKI, MKII) para hardware o software. |
 | **bpmn-diagram** | Generación de diagramas de procesos de negocio BPMN 2.0 en HTML interactivo con bpmn-js (Camunda ref). |
+| **business-implementation-plan** | Transformación de ideas de negocio en planes de implementación estructurados con costeo (Landed Cost), unit economics y hoja de ruta. |
 | **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
@@ -74,12 +79,15 @@ skills-to-review/
 | **entity-diagram-analysis** | Análisis de diagramas de entidades y relaciones. |
 | **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
+| **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes). |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
+| **handoff** | Compactación de la sesión en un documento de traspaso para continuidad entre agentes. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
 | **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile). |
 | **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
+| **research** | Investigación técnica en segundo plano consultando fuentes primarias oficiales. |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |

@@ -25,12 +25,22 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 ### 4. Integridad y Verificación Activa de Enlaces
 - Protocolo de validación técnica en tiempo real mediante consultas HTTP (`200 OK`) previo a la consolidación de reportes, previniendo redirecciones canónicas a buscadores o pantallas de error 404.
 
+### 5. Motor de Asesoría Secuencial e Interrogación Interactiva (Grill-Me Integrado)
+- Implementado en habilidades de formulación estratégica (`business-implementation-plan`, `grill-with-docs`).
+- **Protocolo de Interacción**: Formula una sola pregunta a la vez estructurada con dos alternativas explícitas (Opción recomendada con justificación técnica/financiera vs. Opción alternativa con sus implicancias y trade-offs), consolidando hitos acordados antes de avanzar de fase.
+
+### 6. Modelado Financiero y Cascada de Costos (Landed Cost & Unit Economics)
+- Estandarización de cálculos para costeo de importación, distribución y retail:
+  - Cascada de costeo internacional: Valor FOB $\rightarrow$ Valor CIF $\rightarrow$ Derechos Aduaneros Ad-Valorem ($6\%$) $\rightarrow$ Landed Cost Unitario.
+  - Tratamiento tributario de IVA importación ($19\%$) como crédito fiscal transitorio de capital de trabajo y no como costo directo de producto.
+  - Modelado de márgenes de contribución por canal comercial (D2C, Marketplaces, Mayorista B2B) y cálculo de punto de equilibrio (*Break-Even*).
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.
 - `.agents/skills/<skill-name>/SKILL.md`: Punto de entrada interpretado por el agente para ejecutar el flujo de trabajo.
+- `.agents/skills/<skill-name>/references/`: Documentos de referencia técnica, guías normativas y fórmulas de soporte para la ejecución de la habilidad.
 - `skills-to-review/`: Directorio de incubación y revisión preliminar para nuevas habilidades antes de su incorporación a `.agents/skills/`.
-
 
 ---
 
