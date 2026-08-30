@@ -19,6 +19,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── code-review/
     ├── codebase-design/
     ├── context-compactor/
+    ├── context-extractor/
     ├── cyber-audit/
     ├── debug/
     ├── devsecops-review/
@@ -36,6 +37,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── quotation-for/
     ├── repo-format/
     ├── research/
+    ├── reverse-engineering/
     ├── tdd/
     ├── teach/
     ├── to-qa/
@@ -71,6 +73,7 @@ skills-to-review/
 | **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
+| **context-extractor** | Extracción y digestión estructurada de documentos binarios (PDF, Excel, Word, PPT, CSV) a un almacén RAG local optimizado en tokens. |
 | **cyber-audit** | Auditorías de seguridad y listas de verificación de vulnerabilidades. |
 | **debug** | Triaje y diagnóstico de errores reportados en lenguaje natural. |
 | **devsecops-review** | Verificaciones de seguridad DevSecOps y reporte en formato HTML + Markdown. |
@@ -88,6 +91,7 @@ skills-to-review/
 | **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile). |
 | **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
 | **research** | Investigación técnica en segundo plano consultando fuentes primarias oficiales. |
+| **reverse-engineering** | Análisis e ingeniería inversa sistemática de productos físicos o servicios de software para guiar nuevos desarrollos. |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
