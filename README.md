@@ -51,6 +51,10 @@ skills-to-review/
 ├── cotizador-casas/
 ├── cotizador-departamentos/
 └── teach/
+docs/
+└── guia-metodologia-kanban-planner-agentes.md # Marco ágil de trabajo y gobernanza
+scripts/
+└── planner_client.js                          # Cliente CLI para Microsoft Graph / Planner
 ```
 
 ## Habilidades en Revisión (Skills to Review)

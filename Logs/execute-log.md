@@ -65,3 +65,11 @@
   1. Enrutamiento dinÃ¡mico en dispensacion-detail.component.ts: discriminaciÃ³n por item.product?.id hacia /catalog/:id, cosechas fÃ­sicas (	ipo === 'cosecha') hacia /inventory/harvests/:id y /cultivation/:id, semillas hacia /inventory/seeds/:id, fertilizantes hacia /inventory/fertilizers/:id, ingredientes hacia /inventory/ingredients/:id, e inventario general hacia /inventory/generic/:id.
   2. Eliminado el error 404 (GET /inventario/tipo/cosecha/:id) originado al intentar consultar Ã­tems de catÃ¡logo como si fuesen cosechas de cultivo.
 - **Outcome:** Build de MeedTrack (ite build) completado con Ã©xito en 5.41s sin errores.
+
+## [2026-08-30 23:25] - MT-001 Sistema de Retroalimentación Zero-Backend
+- **Proyecto**: TataDeliBackEnd (MeedTrack)
+- **Ticket**: MT-001 (Modulo 03-Dispensacion)
+- **Complejidad**: Media-Baja
+- **Tiempo de Ejecución**: ~5 minutos
+- **Tokens Aproximados**: ~28.000 tokens
+- **Resumen**: Implementación de inyección dinámica de SURVEY_URL con placeholders {dispensacionId}, {folio}, {cepas} / {flores}, {tickers} en envío de comprobantes por email, deduplicación de cepas, normalización de lenguaje ubicuo (Reserva / Monto Aporte Voluntario), tests TDD (14/14 pasando) y ajuste de 	sconfig.json/	sconfig.build.json para exclusión limpia de artefactos markdown/specs.
