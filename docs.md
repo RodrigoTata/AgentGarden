@@ -32,8 +32,16 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 ### 6. Modelado Financiero y Cascada de Costos (Landed Cost & Unit Economics)
 - Estandarización de cálculos para costeo de importación, distribución y retail:
   - Cascada de costeo internacional: Valor FOB $\rightarrow$ Valor CIF $\rightarrow$ Derechos Aduaneros Ad-Valorem ($6\%$) $\rightarrow$ Landed Cost Unitario.
-  - Tratamiento tributario de IVA importación ($19\%$) como crédito fiscal transitorio de capital de trabajo y no como costo directo de producto.
-  - Modelado de márgenes de contribución por canal comercial (D2C, Marketplaces, Mayorista B2B) y cálculo de punto de equilibrio (*Break-Even*).
+### 7. Manipulación Segura de Binarios y Control de Bloqueos (Win32 Shared Access & Safe-Write)
+- Implementado en `excel-assist` (`scripts/safe_excel.py`).
+- **Problema que resuelve**: Los agentes de IA suelen fallar con errores de permisos (`Errno 13` / `Error 32: The process cannot access the file because it is being used by another process`) cuando el usuario mantiene abierto un archivo en Microsoft Excel o cliente de sincronización OneDrive.
+- **Implementación**:
+  - **Shared-Read en Memoria**: Bypassea bloqueos exclusivos utilizando llamadas Win32 API (`CreateFileW`) con flags de compartición `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`, leyendo el binario a un buffer `io.BytesIO` sin forzar el cierre del aplicativo cliente.
+  - **Detección Atómica de Escritura (`check_write_lock`)**: Verifica la disponibilidad del descriptor antes de persistir, conmutando a archivos temporales de transición (`_temp.xlsx`) si el archivo está en edición activa por el usuario.
+
+### 8. Living-Report Pattern (Reporte Evolutivo Sincronizado)
+- Documento Markdown persistente (`docs/diagnostico-y-mejora-<nombre>.md`) que actúa como fuente única de verdad en auditorías de datos.
+- A diferencia de reportes estáticos, se actualiza en tiempo real en cada ciclo de toma de decisiones del usuario y tras cada mutación confirmada en disco, manteniendo trazabilidad completa de normalizaciones taxonómicas, conversiones de tipo y semáforos ejecutivos.
 
 ## Estructura de Directorios
 

@@ -26,6 +26,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── diagnosing-bugs/
     ├── domain-modeling/
     ├── entity-diagram-analysis/
+    ├── excel-assist/
     ├── execute/
     ├── frontend-analysis/
     ├── generate-html-doc/
@@ -84,6 +85,7 @@ scripts/
 | **diagnosing-bugs** | Ciclo sistemático de diagnóstico para fallas complejas y degradación de rendimiento. |
 | **domain-modeling** | Definición del modelo de dominio, lenguaje ubicuo y decisiones de arquitectura (ADRs). |
 | **entity-diagram-analysis** | Análisis de diagramas de entidades y relaciones. |
+| **excel-assist** | Auditoría, normalización, validación de datos, semáforos ejecutivos y modificación segura de libros Excel (.xlsx) con acceso compartido Win32 y living-reports. |
 | **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
 | **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes). |
