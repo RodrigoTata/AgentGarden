@@ -14,6 +14,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 .agents/
 └── skills/
     ├── agile-prototype/
+    ├── audit-me/
     ├── bpmn-diagram/
     ├── business-implementation-plan/
     ├── code-review/
@@ -73,6 +74,7 @@ scripts/
 | Skill | Descripción |
 |---|---|
 | **agile-prototype** | Planificación y ejecución ágil de iteraciones de prototipos (MKI, MKII) para hardware o software. |
+| **audit-me** | Auditoría crítica implacable de propuestas, lógica de negocio, arquitecturas de dominio y código de software con stress-testing de invariantes y detección de fugas. |
 | **bpmn-diagram** | Generación de diagramas de procesos de negocio BPMN 2.0 en HTML interactivo con bpmn-js (Camunda ref). |
 | **business-implementation-plan** | Transformación de ideas de negocio en planes de implementación estructurados con costeo (Landed Cost), unit economics y hoja de ruta. |
 | **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
