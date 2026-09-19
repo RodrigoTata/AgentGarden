@@ -43,11 +43,31 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - Documento Markdown persistente (`docs/diagnostico-y-mejora-<nombre>.md`) que actúa como fuente única de verdad en auditorías de datos.
 - A diferencia de reportes estáticos, se actualiza en tiempo real en cada ciclo de toma de decisiones del usuario y tras cada mutación confirmada en disco, manteniendo trazabilidad completa de normalizaciones taxonómicas, conversiones de tipo y semáforos ejecutivos.
 
+### 7. Orquestación de la Tríada de Prototipado Físico (`start-a-proyect`)
+- **Definición**: Orquestador integral para ingeniería de hardware, carpintería, cerramientos bioclimáticos y dispositivos IoT.
+- **Tríada de Entregables**:
+  1. *Gemelo Digital 3D Interactivo* (`interactive-3d-structure`): Modelo espacial autónomo con referencias direccionales y cotas métricas.
+  2. *Cubicación, Sourcing y BOM Veteado* (`quotation-for`): Análisis de merma, optimización de cortes comerciales (piezas de 3.2m / rollos) y comparación de 3 opciones locales (Chile: Mercado Libre, Sodimac, Easy).
+  3. *Manual de Montaje e Instructivo de Campo* (`generate-html-doc` + `agile-prototype`): Protocolo procedural paso a paso, seguridad EPP, checklist de QA y versionado por Marks (MKI, MKII).
+
+### 8. Módulo Profundo y Costura Paramétrica en Gemelos Digitales 3D (`interactive-3d-structure`)
+- **Costura Declarativa (`STRUCTURE_SPEC`)**: La física, piezas, escuadrías de madera, mallas técnicas, herrajes y vanos residen en un objeto de configuración desacoplado del motor gráfico.
+- **Motor Gráfico Autónomo (`Structure3DEngine`)**: Three.js autónomo vía CDN en HTML único (cero compiladores locales). Incluye gizmo de brújula corner cube sincronizado, rosa de los vientos en el suelo, cotas interactivas en los 3 ejes y escala humana (1.75m).
+
+### 9. Motor Dual-Theme y Aislamiento Estricto de Impresión (`generate-html-doc` & `writing-great-skills`)
+- **Estándar Visual**: Todo documento HTML interactivo se renderiza en pantalla por defecto en **Modo Noche (Dark Glassmorphic)** con paleta grafito `#070b14`, tarjetas translúcidas y acentos de alto contraste.
+- **Alternador Persistente**: Botón `☀️ Modo Claro / 🌙 Modo Noche` sincronizado en `localStorage`.
+- **Aislamiento para Impresión (`@media print`)**: Anula forzosamente los fondos oscuros a blanco puro (`#ffffff`) y tipografía a negro (`#000000`), ocultando barras de herramientas (`.no-print`) para evitar consumo innecesario de tinta en papel o PDF.
+
+### 10. Cabecera Estándar de Suite Interconectada (`.top-bar`)
+- **Contrato de Navegación**: Todo documento entregable de un proyecto incorpora una barra superior sticky con identidad gráfica (`.brand`) y botones de acción rápida (`.top-actions`) enlazando directamente al visor 3D, cotización y manual instructivo, garantizando navegación bidireccional inmediata.
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.
 - `.agents/skills/<skill-name>/SKILL.md`: Punto de entrada interpretado por el agente para ejecutar el flujo de trabajo.
 - `.agents/skills/<skill-name>/references/`: Documentos de referencia técnica, guías normativas y fórmulas de soporte para la ejecución de la habilidad.
+- `prototypes/`: Directorio de almacenamiento de prototipos interactivos, gemelos digitales 3D, dossiers técnicos y manuales de montaje HTML.
 - `skills-to-review/`: Directorio de incubación y revisión preliminar para nuevas habilidades antes de su incorporación a `.agents/skills/`.
 
 ---

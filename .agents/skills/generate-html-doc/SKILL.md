@@ -57,7 +57,7 @@ Wire the full CSS design system from `design-system.md` (sibling file in this sk
 Replace `VAR_PRIMARY` with the chosen primary color throughout.  
 Replace `VAR_PRIMARY_DARK` with a 15% darker variant.
 
-The design system defines: typography (Inter from Google Fonts), document shell, header, h2/h3, tables, callout boxes, flowchart steps, grid cards, badges, and footer.
+**Dual-Theme Engine:** The design system implements **Modo Noche (Dark Glassmorphic)** as the default screen experience (rich dark slate canvas `#070b14`, glassmorphism, glowing accents) and **Modo Claro** (`body.theme-light`) for daytime reading. Physical printing / PDF export (`@media print`) is strictly isolated to force pure white background and dark text to avoid ink waste.
 
 #### 3b. Content blocks — usage rules
 
@@ -75,7 +75,12 @@ Use blocks only when they serve the content. Do not include a block just to fill
 
 ```
 DOCTYPE -> head (meta, title, style) -> body
-  |- button.print-btn.no-print  (always)
+  |- header.top-bar.no-print (Interconnected Project Suite Header)
+  |    |- div.brand (icon, title, subtitle)
+  |    +- div.top-actions
+  |         |- button#btn-theme-toggle (toggles Modo Noche / Modo Claro)
+  |         |- a.btn-action (direct links to sibling files: Visor 3D, Cotización, Docs)
+  |         +- button.btn-action (window.print PDF)
   +- div.document
        |- div.doc-header  (title, subtitle, div.doc-meta)
        |- h2 1. ...  <- sections, numbered, in order
@@ -83,6 +88,7 @@ DOCTYPE -> head (meta, title, style) -> body
        |- h2 2. ...
        |     +- blocks
        +- div.doc-footer
+  +- script (theme toggle logic with localStorage persistence)
 ```
 
 **Page breaks:** insert `<div class="page-break"></div>` before any section that should begin on a new PDF page (typically after the first dense table or after section 2).
@@ -98,8 +104,10 @@ Before delivering, verify:
 - [ ] `html lang="..."` matches the content language
 - [ ] `title` tag matches the document title
 - [ ] Primary color is applied consistently (header border, h3, flow-step-number, badge-primary, print-btn gradient)
+- [ ] Dual-Theme engine is wired: Dark mode glassmorphic by default, Light mode toggle available
+- [ ] Theme toggle button exists (`#btn-theme-toggle`) and persists state in `localStorage`
 - [ ] Print button exists with `class="no-print"`
-- [ ] `@media print` block hides `.no-print` and removes shadows
+- [ ] `@media print` block hides `.no-print`, removes dark backgrounds and forces clean white paper
 - [ ] At least one `div.callout` exists (even a tip counts)
 - [ ] Footer contains document title and a date or version reference
 - [ ] The file has no broken external references (only Google Fonts is allowed as external)

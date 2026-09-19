@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instructivo de Construcción: Sombreadero & Chasis Lastrado 3.0×2.0m</title>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-page: #070b14;
+      --bg-doc: rgba(13, 20, 36, 0.94);
+      --border-doc: rgba(51, 65, 85, 0.65);
+      --doc-shadow: 0 14px 45px rgba(0, 0, 0, 0.7);
+      --text-title: #ffffff;
+      --text-subtitle: #34d399;
+      --text-body: #cbd5e1;
+      --text-muted: #94a3b8;
+      --card-bg: rgba(18, 28, 51, 0.75);
+      --card-border: rgba(51, 65, 85, 0.6);
+      --meta-bg: rgba(15, 23, 42, 0.85);
+      --meta-border: rgba(51, 65, 85, 0.6);
+      --table-th: #15803d;
+      --table-border: rgba(51, 65, 85, 0.5);
+      --table-row: rgba(15, 23, 42, 0.6);
+      --table-row-alt: rgba(24, 34, 58, 0.5);
+      --table-hover: rgba(51, 65, 85, 0.4);
+      --step-bg: rgba(15, 23, 42, 0.75);
+      --step-border: rgba(51, 65, 85, 0.6);
+      --callout-bg: rgba(16, 185, 129, 0.1);
+      --callout-border: #10b981;
+      --callout-warn-bg: rgba(245, 158, 11, 0.1);
+      --callout-warn-border: #f59e0b;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --divider: rgba(51, 65, 85, 0.6);
+    }
+
+    body.theme-light {
+      --bg-page: #f1f5f9;
+      --bg-doc: #ffffff;
+      --border-doc: #e2e8f0;
+      --doc-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+      --text-title: #0f172a;
+      --text-subtitle: #2e7d32;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --card-bg: #f8fafc;
+      --card-border: #e2e8f0;
+      --meta-bg: #f8fafc;
+      --meta-border: #e2e8f0;
+      --table-th: #1b5e20;
+      --table-border: #e2e8f0;
+      --table-row: #ffffff;
+      --table-row-alt: #f8fafc;
+      --table-hover: #f1f5f9;
+      --step-bg: #f8fafc;
+      --step-border: #e2e8f0;
+      --callout-bg: #f0fdf4;
+      --callout-border: #2e7d32;
+      --callout-warn-bg: #fffbeb;
+      --callout-warn-border: #f59e0b;
+      --primary: #2e7d32;
+      --primary-dark: #1b5e20;
+      --divider: #e2e8f0;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 1.2cm;
+    }
+
+    @media print {
+      body, body.theme-light {
+        background: white !important;
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page-break { page-break-before: always; }
+      .no-print { display: none !important; }
+      .document {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+      .card, .flow-step, .doc-meta {
+        background: #fafafa !important;
+        border: 1px solid #e0e0e0 !important;
+        color: #111 !important;
+      }
+      p, li, td, .flow-step-desc { color: #222 !important; }
+      h1, h2, h3, h4, strong, .flow-step-title { color: #000 !important; }
+      th { background: #1b5e20 !important; color: white !important; }
+      .flow-step { break-inside: avoid; }
+      .card { break-inside: avoid; }
+      tr { break-inside: avoid; }
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-body);
+      line-height: 1.6;
+      font-size: 13px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* --- Top Navigation Bar (Consistent Suite Header) --- */
+    .top-bar {
+      background: var(--bg-doc);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-doc);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+    .brand-title {
+      font-size: 15px; font-weight: 800; color: var(--text-title); letter-spacing: -0.3px;
+    }
+    .brand-subtitle {
+      font-size: 11.5px; color: var(--text-muted);
+    }
+
+    .top-actions {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .btn-action {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      color: var(--text-body);
+      font-size: 12px; font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-action:hover {
+      background: var(--btn-hover);
+      border-color: #64748b;
+      transform: translateY(-1px);
+      color: var(--text-title);
+    }
+    .btn-action.primary {
+      background: var(--primary); color: #070b14;
+      border-color: #34d399; font-weight: 700;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+    }
+    .btn-action.theme-toggle {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.4);
+      font-weight: 700;
+    }
+    .btn-action.theme-toggle:hover {
+      background: rgba(245, 158, 11, 0.3);
+      color: #fff;
+    }
+
+    /* --- Document Shell (A4 Layout) --- */
+    .document {
+      max-width: 210mm;
+      margin: 30px auto;
+      background: var(--bg-doc);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-doc);
+      padding: 44px 40px;
+      box-shadow: var(--doc-shadow);
+      border-radius: 12px;
+      transition: all 0.25s ease;
+    }
+
+    /* --- Document Header --- */
+    .doc-header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .doc-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .doc-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .doc-header h1 {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-title);
+      line-height: 1.25;
+      margin-bottom: 4px;
+      letter-spacing: -0.4px;
+    }
+    .doc-header .subtitle {
+      font-size: 13px;
+      color: var(--text-subtitle);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .doc-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      background: var(--meta-bg);
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--meta-border);
+    }
+    .doc-meta span { display: block; }
+    .doc-meta strong { color: var(--text-title); }
+
+    /* --- Headings --- */
+    h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-title);
+      margin-top: 26px;
+      margin-bottom: 12px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid var(--divider);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    p { margin-bottom: 8px; color: var(--text-body); }
+    ul, ol { padding-left: 18px; margin-bottom: 8px; color: var(--text-body); }
+    li { margin-bottom: 3px; }
+
+    /* --- Tables --- */
+    .table-container {
+      overflow-x: auto;
+      margin: 14px 0;
+      border-radius: 8px;
+      border: 1px solid var(--table-border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    th {
+      background: var(--table-th);
+      color: white;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border: 1px solid var(--table-th);
+      text-align: left;
+    }
+    td {
+      padding: 7px 10px;
+      border: 1px solid var(--table-border);
+      text-align: left;
+      color: var(--text-body);
+      background: var(--table-row);
+    }
+    td:first-child { font-weight: 600; color: var(--text-title); }
+    tr:nth-child(even) td { background: var(--table-row-alt); }
+    tr:hover td { background: var(--table-hover); }
+
+    .highlight-cell {
+      background: rgba(16, 185, 129, 0.18) !important;
+      font-weight: 700;
+      color: #34d399 !important;
+    }
+
+    /* --- Callout Boxes --- */
+    .callout {
+      background: var(--callout-bg);
+      border-left: 4px solid var(--callout-border);
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: var(--text-body);
+    }
+    .callout.warning {
+      background: var(--callout-warn-bg);
+      border-left-color: var(--callout-warn-border);
+    }
+    .callout.danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left-color: #ef4444;
+    }
+    .callout strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-title);
+      font-weight: 700;
+    }
+
+    /* --- Flowchart Steps (Procedural Engine) --- */
+    .flowchart-container {
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--step-bg);
+      border: 1px solid var(--step-border);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .flow-step.warning {
+      border-left-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .flow-step-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #070b14;
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .flow-step.warning .flow-step-number { background: #f59e0b; color: #070b14; }
+    .flow-step-body { flex: 1; }
+    .flow-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .flow-step-title {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text-title);
+    }
+    .flow-step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .flow-step-specs {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--divider);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-subtitle);
+    }
+
+    /* --- Grid Cards --- */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .card {
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--card-bg);
+    }
+    .card h4 {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .card p { font-size: 11.5px; margin-bottom: 0; color: var(--text-muted); }
+
+    /* --- Badges --- */
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-green  { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-blue   { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+    /* --- Footer --- */
+    .doc-footer {
+      margin-top: 36px;
+      padding-top: 14px;
+      border-top: 2px solid var(--divider);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .top-bar { padding: 12px 16px; flex-direction: column; gap: 10px; align-items: flex-start; }
+      .top-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 768px) {
+      .document { padding: 24px 16px; margin: 10px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .doc-meta { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar (Consistent Suite Header with Direct Links) -->
+  <header class="top-bar no-print">
+    <div class="brand">
+      <div class="brand-icon">📖</div>
+      <div>
+        <div class="brand-title">Instructivo Técnico de Construcción</div>
+        <div class="brand-subtitle">Sombreadero & Chasis Lastrado 3.0×2.0m • Procedimiento & EPP</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn-action theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()" title="Alternar entre Modo Noche y Modo Claro">
+        ☀️ Modo Claro
+      </button>
+      <a href="cotizacion_mallas_sombreadero.html" class="btn-action" target="_blank">
+        📊 Cotización & Despiece
+      </a>
+      <a href="sombreadero_azotea_3x2_3d.html" class="btn-action primary" target="_blank">
+        🕶️ Abrir Visor 3D Interactivo
+      </a>
+      <button class="btn-action" onclick="window.print()" title="Imprimir o exportar PDF limpio">
+        🖨️ Imprimir PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Main A4 Document Canvas -->
+  <div class="document">
+
+    <!-- Document Header -->
+    <header class="doc-header">
+      <div class="doc-header-top">
+        <span class="doc-code">INST-AG-2026-001 • REV. MKI</span>
+        <span class="badge badge-green">ESTADO: LISTO PARA EJECUCIÓN</span>
+      </div>
+      <h1>Instructivo Técnico de Construcción: Sombreadero & Chasis Lastrado 3.0×2.0m</h1>
+      <div class="subtitle">Guía de Procedimiento Paso a Paso, Despiece Estructural, Fijaciones y Montaje en Azotea</div>
+      
+      <div class="doc-meta">
+        <div><strong>Proyecto:</strong> Sombreadero Azotea con Blindaje Doble</div>
+        <div><strong>Ubicación:</strong> Azotea Costera (Vientos Dominantes SW)</div>
+        <div><strong>Límites Macizos:</strong> Muro Sur 9.0 m • Pretil Oeste 1.0 m</div>
+        <div><strong>Sistema Anclaje:</strong> Lastre Gravitacional 400–600 kg (Sin Perforar)</div>
+      </div>
+    </header>
+
+    <!-- SECCIÓN 1: RESUMEN DEL PROYECTO Y CRITERIOS DE DISEÑO -->
+    <section>
+      <h2>1. Resumen Ejecutivo y Criterios Aerodinámicos</h2>
+      <p>
+        El presente instructivo define el procedimiento estandarizado para la prefabricación, armado y montaje de un <strong>sombreadero modular de 3.00 × 2.00 m</strong> diseñado para azoteas costeras sometidas a fuertes ráfagas del Suroeste (SW).
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h4>Blindaje Sur (9.0 m)</h4>
+          <p>Adosado al muro medianero vecino. Cumbrera alta a <strong>2.25 m</strong>. <em>Cero malla requerida</em> en la retaguardia, neutralizando turbulencias y ahorrando 6.75 m² de textil.</p>
+        </div>
+        <div class="card">
+          <h4>Pretil Oeste (1.0 m)</h4>
+          <p>Muro de bloques que corta la salinidad rasante. La madera incorpora <strong>malla híbrida solo de +1.00m a +2.12m</strong>, reduciendo en 50% la fuerza de arrastre.</p>
+        </div>
+        <div class="card">
+          <h4>Lastre por Gravedad</h4>
+          <p>Chasis de pino 2×4” sobre calzos de neopreno de 10 mm. <strong>400–600 kg de peso muerto</strong> en bancales húmedos aseguran inmovilidad sin perforar la losa.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Regla de Oro Constructiva (Cero Perforación en Losa):</strong>
+        Bajo ninguna circunstancia se deben perforar tarugos o pernos mecánicos sobre la losa de la azotea. Toda la estabilidad descansa en el chasis perimetral cerrado y en la masa distribuida de los dos bancales longitudinales cargados de sustrato húmedo.
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: LISTADO DE MATERIALES Y CUBICACIÓN DETALLADA -->
+    <section>
+      <h2>2. Lista de Materiales y Cubicación Estructural</h2>
+      <p>Todos los maderos corresponden a <strong>Pino Seco en Cámara (humedad &le; 12%)</strong> tratado con preservante fungicida e hidrófugo exterior (Lasur).</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza / Descripción</th>
+              <th>Escuadría Comercial</th>
+              <th>Largo Corte</th>
+              <th>Cant.</th>
+              <th>Función Estructural</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Solera Base Sur (Posterior)</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>3.00 m</td>
+              <td>1 un</td>
+              <td>Chasis de apoyo junto a muro de 9m</td>
+            </tr>
+            <tr>
+              <td>Solera Base Norte (Frontal)</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>2.40 m</td>
+              <td>1 un</td>
+              <td>Chasis frontal (deja libre vano de 60cm)</td>
+            </tr>
+            <tr>
+              <td>Soleras Laterales (Este y Oeste)</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>2.00 m</td>
+              <td>2 un</td>
+              <td>Cierres laterales del chasis perimetral</td>
+            </tr>
+            <tr>
+              <td>Travesaños Interiores Portantes</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>1.92 m</td>
+              <td>2 un</td>
+              <td>Soporte directo para peso de bancales</td>
+            </tr>
+            <tr class="highlight-cell">
+              <td>Pilares Maestros Cumbrera Sur</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>2.25 m</td>
+              <td>3 un</td>
+              <td>Postes altos de cumbrera (Sur 9m)</td>
+            </tr>
+            <tr class="highlight-cell">
+              <td>Pilares Frontales Norte</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>2.00 m</td>
+              <td>3 un</td>
+              <td>Postes fachada solar (Norte)</td>
+            </tr>
+            <tr>
+              <td>Poste Marco de Acceso</td>
+              <td>Pino 2×4” (41×90 mm)</td>
+              <td>2.00 m</td>
+              <td>1 un</td>
+              <td>Delimita vano de puerta de 60 cm</td>
+            </tr>
+            <tr>
+              <td>Dintel Superior Vano</td>
+              <td>Pino 2×2” (41×41 mm)</td>
+              <td>0.60 m</td>
+              <td>1 un</td>
+              <td>Fijación rollo de velcro a cota +1.85 m</td>
+            </tr>
+            <tr>
+              <td>Viga Corona Sur (Cumbrera)</td>
+              <td>Pino 2×3” (41×65 mm)</td>
+              <td>3.00 m</td>
+              <td>1 un</td>
+              <td>Amarre superior trasero a cota 2.25 m</td>
+            </tr>
+            <tr>
+              <td>Viga Corona Norte (Frente)</td>
+              <td>Pino 2×3” (41×65 mm)</td>
+              <td>3.00 m</td>
+              <td>1 un</td>
+              <td>Amarre superior frontal a cota 2.00 m</td>
+            </tr>
+            <tr>
+              <td>Tirantes Inclinados Techo</td>
+              <td>Pino 2×3” (41×65 mm)</td>
+              <td>2.02 m</td>
+              <td>3 un</td>
+              <td>Pendiente descendente Sur → Norte (~8%)</td>
+            </tr>
+            <tr>
+              <td>Costaneras Anti-Guateo</td>
+              <td>Pino 2×2” (41×41 mm)</td>
+              <td>3.00 m</td>
+              <td>2 un</td>
+              <td>Evitan embolsamiento de malla de techo</td>
+            </tr>
+            <tr>
+              <td>Tornapuntas Diagonales 45°</td>
+              <td>Pino 2×2” (41×41 mm)</td>
+              <td>0.55 m</td>
+              <td>6 un</td>
+              <td>Arriostramiento contra esfuerzos eólicos</td>
+            </tr>
+            <tr>
+              <td>Listones Tapajuntas Prensa-Malla</td>
+              <td>Pino 1×2” (19×41 mm)</td>
+              <td>3.20 m</td>
+              <td>8 un</td>
+              <td>Aprisionan mallas evitando desgarros</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3>Fijaciones y Herrajes Mecánicos</h3>
+          <ul>
+            <li><strong>14 un</strong> Escuadras esquineras reforzadas 90×90×2.5 mm galvanizadas.</li>
+            <li><strong>1 caja (100 un)</strong> Tornillos estructurales 3” a 3 ½” para madera.</li>
+            <li><strong>2 cajas (200 un c/u)</strong> Tornillos madera 1 ½” (para listones tapajuntas).</li>
+            <li><strong>14 un</strong> Calzos de Neopreno o goma reciclada de 100×100×10 mm.</li>
+            <li><strong>1 galón</strong> Protector Lasur Exterior poro abierto (filtro UV + fungicida).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Mallas Técnicas y Acceso Flexible</h3>
+          <ul>
+            <li><strong>1 paño (3×10 m)</strong> Malla Anti-Insectos / Anti-Trips 60 Mesh ($24.990 CLP).</li>
+            <li><strong>1 corte (3×4 m)</strong> Malla Sombra Raschel 50% con protección UV ($14.990 CLP).</li>
+            <li><strong>1 rollo (5 m × 50 mm)</strong> Velcro adhesivo industrial extra fuerte ($9.990 CLP).</li>
+            <li><strong>1 tira (20 mm × 65 cm)</strong> Tubo conduit de PVC rígido (barra contrapeso puerta).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECCIÓN 3: HERRAMIENTAS Y PREPARACIÓN PREVIA -->
+    <section>
+      <h2>3. Herramientas Requeridas y Seguridad (EPP)</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h4>Herramientas de Trabajo</h4>
+          <ul>
+            <li>Sierra circular o ingletadora con disco de 40+ dientes.</li>
+            <li>Atornillador de impacto o taladro inalámbrico (batería 18V).</li>
+            <li>Puntas de atornillar Torx / Phillips y brocas de avellanar.</li>
+            <li>Nivel de burbuja de 60 cm o 100 cm y escuadra de carpintero.</li>
+            <li>Huincha de medir (5 metros), tiralíneas y lápiz de carpintero.</li>
+            <li>Tijera de hojalatero o sastre (para corte limpio de mallas).</li>
+            <li>Grapadora manual T50 con grapas de 10 mm (solo premontaje).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Seguridad en Azotea (EPP)</h4>
+          <ul>
+            <li>Guantes de nitrilo/descarne para manipulación de maderas.</li>
+            <li>Antiparras de policarbonato con protección UV.</li>
+            <li>Zapatos de seguridad con suela antideslizante de goma.</li>
+            <li>Bloqueador solar FPS 50+ y gorro legionario para faenas.</li>
+            <li>Línea de vida / arnés si la azotea carece de pretil reglamentario.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <strong>Precaución con Condiciones Meteorológicas en Azotea:</strong>
+        No realizar el izamiento de marcos ni el extendido de mallas textiles con vientos superiores a 25 km/h. La malla actúa como vela durante la manipulación y puede desestabilizar a los operadores.
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: PROTOCOLO OPERATIVO DE CONSTRUCCIÓN PASO A PASO -->
+    <section>
+      <h2>4. Procedimiento de Construcción Paso a Paso</h2>
+
+      <div class="flowchart-container">
+
+        <!-- PASO 1 -->
+        <div class="flow-step">
+          <div class="flow-step-number">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Replanteo en Suelo y Colocación de Calzos Elastoméricos</div>
+              <span class="badge badge-blue">FASE BASE</span>
+            </div>
+            <div class="flow-step-desc">
+              Barrer y limpiar de polvo y gravilla la zona de 3.0 × 2.0 m adyacente al muro Sur y pretil Oeste. Distribuir los 14 calzos de neopreno de 100×100×10 mm: 4 en esquinas, 2 en centros de soleras de 3m, 2 en laterales de 2m y 6 bajo los puntos de apoyo de los travesaños interiores.
+            </div>
+            <div class="flow-step-specs">
+              Tolerancia de desvío ortogonal: &plusmn; 3 mm (verificar diagonales de 3.60 m).
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="flow-step">
+          <div class="flow-step-number">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Armado del Chasis Base Corrido (Pino 2×4”)</div>
+              <span class="badge badge-blue">FASE BASE</span>
+            </div>
+            <div class="flow-step-desc">
+              Presentar la Solera Sur (3.00 m), Solera Norte (2.40 m dejando 60 cm libres para el vano) y las Soleras Laterales (2.00 m). Unir a tope mediante tornillos estructurales de 3 ½” (2 por unión). Instalar los dos travesaños interiores transversales de 1.92 m a un tercio de luz (X = -0.75m y X = +0.75m). Reforzar con escuadras metálicas de 90×90 mm atornilladas en las caras interiores.
+            </div>
+            <div class="flow-step-specs">
+              Control: Verificar que el vano de acceso de 60 cm en el extremo Este quede completamente a ras de piso.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="flow-step">
+          <div class="flow-step-number">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Izamiento de Pilares Maestros y Arriostramiento Temporal</div>
+              <span class="badge badge-green">ESTRUCTURA</span>
+            </div>
+            <div class="flow-step-desc">
+              Montar los 3 pilares traseros Sur de 2.25 m (adosados al muro de 9 m) y los 3 pilares delanteros Norte de 2.00 m sobre la solera base. Fijar a la solera con escuadras metálicas de 90×90 mm por ambos costados. Instalar el poste adicional del vano de acceso a 60 cm de la esquina Este. Aplomar con nivel de burbuja y clavar riostras temporales de desecho para asegurar verticalidad.
+            </div>
+            <div class="flow-step-specs">
+              Cota Cumbrera Sur: +2.25 m • Cota Frente Norte: +2.00 m.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="flow-step">
+          <div class="flow-step-number">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Fijación de Vigas Corona, Rafters Inclinados y Dintel de Paso</div>
+              <span class="badge badge-green">ESTRUCTURA</span>
+            </div>
+            <div class="flow-step-desc">
+              Instalar la Viga Corona Sur (Pino 2×3” de 3.0 m) a cota 2.25 m y la Viga Corona Norte a cota 2.00 m. Colocar los 3 tirantes inclinados de techo de 2.02 m (Oeste, Centro, Este) generando la pendiente descendente de 12.5% (~8.3°). Colocar el dintel horizontal de pino 2×2” sobre el vano de puerta a cota +1.85 m. Instalar las dos costaneras intermedias de 3.0 m a los tercios del techo para prevenir el combamiento de la malla.
+            </div>
+            <div class="flow-step-specs">
+              Pendiente: 25 cm de caída en 2.0 m de recorrido.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 5 -->
+        <div class="flow-step warning">
+          <div class="flow-step-number">5</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Instalación y Carga de Bancales de Lastre Gravitacional</div>
+              <span class="badge badge-orange">LASTRE CRÍTICO</span>
+            </div>
+            <div class="flow-step-desc">
+              <strong>PASO OBLIGATORIO ANTES DE PONER MALLAS:</strong> Armar los dos bancales longitudinales de madera (Bancal Sur Profundo 2.85×0.50×0.42 m y Bancal Norte Secundario 2.15×0.45×0.35 m). Asentarlos sobre los travesaños interiores del chasis. Llenar con el sustrato de cultivo y humedecer ligeramente.
+            </div>
+            <div class="flow-step-specs">
+              Masa muerta alcanzada: 450 a 550 kg. La estructura queda blindada contra levantamiento eólico.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 6 -->
+        <div class="flow-step">
+          <div class="flow-step-number">6</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Instalación de Malla Anti-Trips Perimetral con Listón Tapajuntas</div>
+              <span class="badge badge-blue">CERRAMIENTOS</span>
+            </div>
+            <div class="flow-step-desc">
+              Desplegar la Malla Anti-Trips 60 Mesh. Cortar según despiece:
+              <br>• <strong>Lateral Oeste Híbrido:</strong> Instalar solo desde la corona del pretil (+1.00m) hasta la viga inclinada (+2.12m).
+              <br>• <strong>Lateral Este:</strong> Forrar de suelo a techo completo (2.00 a 2.25m).
+              <br>• <strong>Frente Norte:</strong> Forrar el paño fijo de 2.40 × 2.00 m.
+              <br>Tensar el paño y prensarlo atornillando listones de pino 1×2” sobre los pilares cada 35 cm con tornillos de 1 ½”.
+            </div>
+            <div class="flow-step-specs">
+              Técnica Sándwich: Madero 2×4” + Malla tensada + Listón 1×2” atornillado. Cero rasgaduras.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 7 -->
+        <div class="flow-step">
+          <div class="flow-step-number">7</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Montaje de Cortina Enrollable Flexible en Vano Norte</div>
+              <span class="badge badge-blue">CERRAMIENTOS</span>
+            </div>
+            <div class="flow-step-desc">
+              Confeccionar el paño de puerta (0.75 × 2.05 m). Adherir y grapar la cinta de velcro industrial de 50 mm (cara suave) en los laterales y cabecera de la tela. Fijar la contraparte (velcro macho) sobre el marco de madera de pino 2×4” y dintel a 1.85 m. En el extremo inferior, sellar un dobladillo e introducir el tubo de PVC de 20 mm con lastre interior para conferir peso y facilitar el enrollado manual.
+            </div>
+            <div class="flow-step-specs">
+              Vano libre de paso: 60 cm ancho × 1.85 m alto. Cierre 100% estanco al viento y plagas.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 8 -->
+        <div class="flow-step">
+          <div class="flow-step-number">8</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Instalación y Tensado de Malla Sombra Techo (50%)</div>
+              <span class="badge badge-blue">CERRAMIENTOS</span>
+            </div>
+            <div class="flow-step-desc">
+              Extender el corte de 3.0 × 4.0 m de Malla Sombra Raschel 50%. Comenzar la fijación en la cumbrera Sur (2.25 m) mediante listón tapajunta atornillado. Tensar suavemente hacia el frente Norte acompañando la caída del 8.3%. Prensar sobre los tirantes inclinados y costaneras intermedias. Doblar el sobrante frontal sobre la viga corona de 2.00 m conformando una pequeña visera de remate.
+            </div>
+            <div class="flow-step-specs">
+              Comportamiento aerodinámico: El viento SW resbala tangencialmente hacia el norte sin embolsarse.
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 9 -->
+        <div class="flow-step">
+          <div class="flow-step-number">9</div>
+          <div class="flow-step-body">
+            <div class="flow-step-header">
+              <div class="flow-step-title">Instalación de Entutorado Vertical para Tomates Indeterminados</div>
+              <span class="badge badge-green">AGRONOMÍA</span>
+            </div>
+            <div class="flow-step-desc">
+              En la cara inferior de la viga cumbrera Sur (cota +2.25 m), instalar 6 cáncamos cerrados espaciados cada 45 cm. Tensar cuerdas de polipropileno resistente a rayos UV hasta los anclajes inferiores del Bancal Sur Profundo. Guiar las 6 matas de tomate indeterminado mediante clips plásticos de entutorado vertical.
+            </div>
+            <div class="flow-step-specs">
+              Aprovechamiento vertical total: 2.25 m libres de desarrollo foliar sin sombras cruzadas.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECCIÓN 5: PROTOCOLO DE INSPECCIÓN Y CONTROL DE CALIDAD -->
+    <section>
+      <h2>5. Control de Calidad y Mantenimiento Periódico</h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Punto de Control</th>
+              <th>Criterio de Aceptación</th>
+              <th>Frecuencia de Revisión</th>
+              <th>Acción Correctiva</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Calzos de Neopreno</strong></td>
+              <td>Alineados bajo solera, sin aplastamiento excesivo ni desplazamiento.</td>
+              <td>Mensual / Post-temporal</td>
+              <td>Reubicar con palanca manual y verificar escurrimiento pluvial.</td>
+            </tr>
+            <tr>
+              <td><strong>Tornillos Estructurales</strong></td>
+              <td>Apretados a fondo, sin holguras en escuadras ni postes maestros.</td>
+              <td>A los 15 días y semestral</td>
+              <td>Reapriete con atornillador de impacto (torque moderado).</td>
+            </tr>
+            <tr>
+              <td><strong>Tensión de Mallas</strong></td>
+              <td>Telas planas sin bolsas, guatas ni flameo excesivo con brisa.</td>
+              <td>Bimestral</td>
+              <td>Soltar listón tapajunta, retensar y volver a prensar.</td>
+            </tr>
+            <tr>
+              <td><strong>Velcro de Acceso</strong></td>
+              <td>Adherencia firme de 50 mm, cierre hermético sin entrada de insectos.</td>
+              <td>Semanal</td>
+              <td>Limpiar pelusas y polvo con cepillo de cerdas duras.</td>
+            </tr>
+            <tr>
+              <td><strong>Humedad del Sustrato</strong></td>
+              <td>Peso muerto mantenido entre 400 y 600 kg mediante riego regular.</td>
+              <td>Semanal</td>
+              <td>Mantener riego por goteo activo para asegurar masa de lastre.</td>
+            </tr>
+            <tr>
+              <td><strong>Limpieza de Salinidad</strong></td>
+              <td>Malla libre de costras salinas para mantener ventilación y fotosíntesis.</td>
+              <td>Trimestral (Zona costera)</td>
+              <td>Enjuague suave con agua dulce mediante manguera o aspersor.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 6: HISTORIAL DE VERSIONES Y REGISTRO EVOLUTIVO -->
+    <section>
+      <h2>6. Control de Revisiones y Registro Evolutivo</h2>
+      <p>Este documento se mantendrá actualizado a medida que el proyecto avance hacia pruebas de campo, modificaciones agronómicas o adición de sistemas automáticos de riego y sensórica IoT.</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Versión</th>
+              <th>Fecha</th>
+              <th>Autor / Responsable</th>
+              <th>Descripción del Cambio / Hito</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>v1.0 (MKI)</strong></td>
+              <td>19-09-2026</td>
+              <td>Antigravity AgentGarden</td>
+              <td>Lanzamiento inicial: Integración de Muro Sur 9m, Pretil Oeste 1m, lastre 500kg y mallas 60 mesh.</td>
+            </tr>
+            <tr>
+              <td><strong>v1.1 (Pendiente)</strong></td>
+              <td>Próxima iteración</td>
+              <td>En terreno</td>
+              <td>Ajuste fino de cortes según trazado real en azotea y validación tras primera ráfaga marina.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Document Footer -->
+    <footer class="doc-footer">
+      <div><strong>AgentGarden Prototypes</strong> • Instructivo Técnico de Construcción Sombreadero Azotea 3.0×2.0m</div>
+      <div>Página 1 / 1 • Formato A4 Estándar • Documento Dinámico</div>
+    </footer>
+
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('theme-light');
+      const btn = document.getElementById('btn-theme-toggle');
+      if (isLight) {
+        btn.innerHTML = '🌙 Modo Noche';
+        localStorage.setItem('doc-theme', 'light');
+      } else {
+        btn.innerHTML = '☀️ Modo Claro';
+        localStorage.setItem('doc-theme', 'dark');
+      }
+    }
+
+    // Default: Modo Noche (coincide con estética cotizacion_mallas_sombreadero.html)
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('doc-theme');
+      const btn = document.getElementById('btn-theme-toggle');
+      if (savedTheme === 'light') {
+        document.body.classList.add('theme-light');
+        if (btn) btn.innerHTML = '🌙 Modo Noche';
+      } else {
+        document.body.classList.remove('theme-light');
+        if (btn) btn.innerHTML = '☀️ Modo Claro';
+      }
+    });
+  </script>
+</body>
+</html>

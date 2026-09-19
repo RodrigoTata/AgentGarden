@@ -12,6 +12,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
 
 ```
 .agents/
+├── rules/
 └── skills/
     ├── agile-prototype/
     ├── audit-me/
@@ -34,12 +35,17 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── grill-me-rg/
     ├── grill-with-docs/
     ├── handoff/
+    ├── implementation-plan/
     ├── improve-codebase-architecture/
+    ├── interactive-3d-structure/
     ├── prepare-for-commit/
     ├── quotation-for/
     ├── repo-format/
     ├── research/
     ├── reverse-engineering/
+    ├── rule-creating/
+    ├── start-a-project/
+    ├── start-a-proyect/
     ├── tdd/
     ├── teach/
     ├── to-qa/
@@ -48,15 +54,20 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── wayfinder/
     ├── web-audit/
     └── writing-great-skills/
+prototypes/                                       # Entregables interactivos de prototipado y validación técnica
+├── cotizacion_mallas_sombreadero.html
+├── instructivo_construccion_sombreadero.html
+├── sombreadero_azotea_3x2_3d.html
+└── docs/                                         # Decisiones de arquitectura (ADRs) y glosario de dominio
 skills-to-review/
 ├── ask-matt/
 ├── cotizador-casas/
 ├── cotizador-departamentos/
 └── teach/
 docs/
-└── guia-metodologia-kanban-planner-agentes.md # Marco ágil de trabajo y gobernanza
+└── guia-metodologia-kanban-planner-agentes.md    # Marco ágil de trabajo y gobernanza
 scripts/
-└── planner_client.js                          # Cliente CLI para Microsoft Graph / Planner
+└── planner_client.js                             # Cliente CLI para Microsoft Graph / Planner
 ```
 
 ## Habilidades en Revisión (Skills to Review)
@@ -90,16 +101,21 @@ scripts/
 | **excel-assist** | Auditoría, normalización, validación de datos, semáforos ejecutivos y modificación segura de libros Excel (.xlsx) con acceso compartido Win32 y living-reports. |
 | **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
-| **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes). |
+| **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes) con motor Dual-Theme (Modo Noche/Claro) y cabecera interconectada. |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
 | **handoff** | Compactación de la sesión en un documento de traspaso para continuidad entre agentes. |
+| **implementation-plan** | Diseño de planes de implementación des-riesgados con costuras arquitectónicas, diseño de verificación y gate de aprobación de usuario. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
+| **interactive-3d-structure** | Generación de gemelos digitales y estructuras 3D interactivas en Three.js con costura declarativa, cotas, brújula cardinal y escala humana. |
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
-| **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile). |
+| **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile) con dashboard interactivo y plan de corte. |
 | **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
 | **research** | Investigación técnica en segundo plano consultando fuentes primarias oficiales. |
 | **reverse-engineering** | Análisis e ingeniería inversa sistemática de productos físicos o servicios de software para guiar nuevos desarrollos. |
+| **rule-creating** | Creación, modificación y auditoría de reglas operacionales y guardrails permanentes para agentes en cualquier espacio de trabajo. |
+| **start-a-project** | Alias de conveniencia para `start-a-proyect`. |
+| **start-a-proyect** | Orquestador maestro para proyectos físicos (sombraderos, carpintería), IoT/3D print y digitales articulando la Tríada (3D, Cotización y Manual). |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
@@ -107,7 +123,7 @@ scripts/
 | **to-tickets** | Desglose de especificaciones en tareas, tickets e issues accionables. |
 | **wayfinder** | Mapeo y gestión de iniciativas complejas divididas en mapas de tickets de decisión. |
 | **web-audit** | Auditoría y análisis completo de sitios web. |
-| **writing-great-skills** | Guía de buenas prácticas para redactar y empaquetar nuevas habilidades. |
+| **writing-great-skills** | Guía de buenas prácticas y vocabulario para redactar skills predecibles, incorporando el patrón de UI Dual-Theme. |
 
 ---
 

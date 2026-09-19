@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visor 3D Interactivo: Sombreadero & Chasis Lastrado 3.0×2.0m (Azotea Protegida)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #070b12;
+      --panel-bg: rgba(13, 20, 36, 0.88);
+      --panel-border: rgba(51, 65, 85, 0.65);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-wood: #d97706;
+      --accent-mesh: #06b6d4;
+      --accent-wind: #38bdf8;
+      --accent-wall: #64748b;
+      --accent-solar: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100%; height: 100%; overflow: hidden;
+      background-color: var(--bg-dark);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--text-main);
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #webgl-canvas {
+      width: 100%; height: 100%; display: block;
+      cursor: grab;
+    }
+    #webgl-canvas:active { cursor: grabbing; }
+
+    /* HUD Header */
+    .hud-header {
+      position: absolute; top: 16px; left: 16px; z-index: 20;
+      background: var(--panel-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      max-width: 480px;
+      pointer-events: auto;
+    }
+    .hud-title {
+      font-size: 15px; font-weight: 800; color: #fff;
+      display: flex; align-items: center; gap: 8px; letter-spacing: -0.3px;
+    }
+    .hud-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      background: rgba(16, 185, 129, 0.15); color: #34d399;
+      padding: 3px 8px; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .hud-subtitle {
+      font-size: 11.5px; color: var(--text-muted); margin-top: 5px; line-height: 1.45;
+    }
+    .hud-specs-pills {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
+    }
+    .pill {
+      font-size: 10px; font-family: 'JetBrains Mono', monospace;
+      background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(51, 65, 85, 0.8);
+      padding: 2px 7px; border-radius: 6px; color: #cbd5e1;
+    }
+    .pill.highlight {
+      border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; background: rgba(56, 189, 248, 0.1);
+    }
+    .pill.accent {
+      border-color: rgba(16, 185, 129, 0.4); color: #34d399; background: rgba(16, 185, 129, 0.1);
+    }
+
+    /* Direction / Orientation Indicator */
+    .direction-badge {
+      position: absolute; top: 16px; right: 150px; z-index: 20;
+      background: var(--panel-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border); border-radius: 10px;
+      padding: 8px 14px; font-size: 11px; font-weight: 700;
+      color: #38bdf8; display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .compass-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #ef4444; box-shadow: 0 0 8px #ef4444;
+    }
+
+    /* Gizmo 3D Corner Viewport */
+    #gizmo-container {
+      position: absolute; top: 16px; right: 16px; z-index: 20;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1px solid var(--panel-border); border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    /* Floating Toolbars */
+    .controls-panel {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 20;
+      background: var(--panel-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border); border-radius: 16px;
+      padding: 8px 12px; display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 12px 35px -5px rgba(0,0,0,0.6);
+      flex-wrap: wrap; justify-content: center;
+    }
+    .btn-toolbar {
+      background: rgba(30, 41, 59, 0.75); border: 1px solid rgba(51, 65, 85, 0.8);
+      color: #f1f5f9; font-size: 11px; font-weight: 600;
+      padding: 7px 12px; border-radius: 9px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn-toolbar:hover {
+      background: rgba(51, 65, 85, 0.9); border-color: #64748b;
+      transform: translateY(-1px);
+    }
+    .btn-toolbar.active {
+      background: var(--accent); color: #0f172a; font-weight: 700;
+      border-color: #34d399; box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+    .btn-toolbar.wind-active {
+      background: #0284c7; color: #fff; font-weight: 700;
+      border-color: #38bdf8; box-shadow: 0 0 14px rgba(56, 189, 248, 0.5);
+    }
+    .separator {
+      width: 1px; height: 22px; background: rgba(51, 65, 85, 0.8); margin: 0 3px;
+    }
+
+    /* Layers Toggle Menu */
+    .layers-panel {
+      position: absolute; top: 185px; left: 16px; z-index: 20;
+      background: var(--panel-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border); border-radius: 14px;
+      padding: 12px 16px; width: 250px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .layers-title {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      color: var(--text-muted); letter-spacing: 0.8px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .layer-item {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 7px; font-size: 11px; font-weight: 600; color: #cbd5e1;
+      cursor: pointer;
+    }
+    .layer-item:hover { color: #fff; }
+    .layer-checkbox {
+      accent-color: var(--accent); cursor: pointer; width: 14px; height: 14px;
+    }
+
+    /* Piece Inspector Tooltip */
+    #inspector-tooltip {
+      position: absolute; z-index: 30; pointer-events: none;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+      border: 1px solid #38bdf8; border-radius: 10px;
+      padding: 10px 14px; color: #fff; font-size: 11px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      display: none; min-width: 230px; max-width: 320px;
+      transform: translate(-50%, -120%);
+    }
+    #inspector-tooltip strong { display: block; font-size: 12px; color: #38bdf8; margin-bottom: 2px; }
+    #inspector-tooltip .meta { color: #94a3b8; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+    #inspector-tooltip .agro-note {
+      margin-top: 6px; padding-top: 5px; border-top: 1px dashed rgba(51,65,85,0.7);
+      color: #34d399; font-size: 10px; font-weight: 600;
+    }
+
+    /* Cubicación Modal */
+    #cubicacion-modal {
+      position: absolute; top: 0; right: 0; bottom: 0; width: 420px; z-index: 40;
+      background: rgba(11, 17, 32, 0.97); backdrop-filter: blur(14px);
+      border-left: 1px solid var(--panel-border);
+      padding: 24px; overflow-y: auto;
+      transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 35px rgba(0,0,0,0.7);
+    }
+    #cubicacion-modal.open { transform: translateX(0); }
+    .drawer-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .drawer-title { font-size: 15px; font-weight: 800; color: #fff; }
+    .close-btn {
+      background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer;
+    }
+    .close-btn:hover { color: #fff; }
+    .bom-section {
+      margin-bottom: 16px; background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.6); border-radius: 10px; padding: 12px;
+    }
+    .bom-header {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      color: #38bdf8; margin-bottom: 8px; letter-spacing: 0.5px;
+    }
+    .bom-list { list-style: none; font-size: 11.5px; line-height: 1.6; color: #cbd5e1; }
+    .bom-list li { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed rgba(51,65,85,0.4); }
+    .bom-list li:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+    .qty-tag {
+      display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #34d399;
+      padding: 1px 5px; border-radius: 4px; margin-right: 4px;
+    }
+    .saving-tag {
+      display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
+      padding: 1px 5px; border-radius: 4px; margin-right: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .hud-header { max-width: calc(100% - 32px); top: 10px; left: 10px; }
+      #gizmo-container { display: none; }
+      .direction-badge { top: auto; bottom: 85px; right: 16px; }
+      .layers-panel { display: none; }
+      #cubicacion-modal { width: 100%; }
+    }
+  </style>
+
+  <!-- Importmap Three.js -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- WebGL Canvas Principal -->
+  <div id="webgl-canvas"></div>
+
+  <!-- HUD Principal Superior Izquierdo -->
+  <div class="hud-header">
+    <div class="hud-title">
+      <span>🌲 Sombreadero & Chasis Lastrado</span>
+      <span class="hud-badge">Azotea 3.0×2.0m</span>
+    </div>
+    <div class="hud-subtitle">
+      Configuración aerodinámica con <strong>blindaje macizo doble</strong>: Muro colindante de 9 m al Sur y Pretil de bloques de 1.0 m al Oeste frente a ráfagas marinas.
+    </div>
+    <div class="hud-specs-pills">
+      <span class="pill">H.Sur (Cumbrera): 2.25 m</span>
+      <span class="pill">H.Norte (Frente): 2.00 m</span>
+      <span class="pill accent">Caída: Sur → Norte (~8.3%)</span>
+      <span class="pill highlight">Muro Sur: 9.0 m (Cortaviento)</span>
+      <span class="pill highlight">Muro Oeste: Bloques 1.0 m</span>
+      <span class="pill">Acceso Norte: Vano 60cm / Dintel 1.85m</span>
+      <span class="pill accent">Lastre: 400–600 kg (Bancales húmedos)</span>
+    </div>
+  </div>
+
+  <!-- Indicador Cardinal y de Orientación -->
+  <div class="direction-badge" id="direction-indicator">
+    <span class="compass-dot"></span>
+    <span id="direction-text">Vista: Isométrica (NE - Acceso y Sol)</span>
+  </div>
+
+  <!-- Gizmo 3D Corner Viewport -->
+  <div id="gizmo-container"></div>
+
+  <!-- Panel de Capas (Layers) -->
+  <div class="layers-panel">
+    <div class="layers-title">
+      <span>Capas de Modelo</span>
+      <span>👁️</span>
+    </div>
+    <label class="layer-item">
+      <span>Muro Vecino 9m (Sur)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-wall-south" checked />
+    </label>
+    <label class="layer-item">
+      <span>Muro Bloques 1.0m (Oeste)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-wall-west" checked />
+    </label>
+    <label class="layer-item">
+      <span>Estructura Pino (2×4", 2×3")</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-wood" checked />
+    </label>
+    <label class="layer-item">
+      <span>Mallas Paredes (Híbrida/Anti-trips)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-mesh-walls" checked />
+    </label>
+    <label class="layer-item">
+      <span>Malla Sombra Techo (50%)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-mesh-roof" checked />
+    </label>
+    <label class="layer-item">
+      <span>Puerta Velcro (Norte - 1.85m)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-door" checked />
+    </label>
+    <label class="layer-item">
+      <span>Bancales Lastre (400–600kg)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-ballast" checked />
+    </label>
+    <label class="layer-item">
+      <span>Tomates & Entutorado (Sur)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-plants" checked />
+    </label>
+    <label class="layer-item">
+      <span>Flujo Viento SW (Aerodinámica)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-wind" checked />
+    </label>
+    <label class="layer-item">
+      <span>Cotas y Dimensiones</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-dimensions" checked />
+    </label>
+    <label class="layer-item">
+      <span>Escala Humana (1.75m)</span>
+      <input type="checkbox" class="layer-checkbox" id="layer-human" checked />
+    </label>
+  </div>
+
+  <!-- Barra de Herramientas Inferior -->
+  <div class="controls-panel">
+    <button class="btn-toolbar active" id="btn-view-iso" title="Vista Isométrica general">Isométrica NE</button>
+    <button class="btn-toolbar" id="btn-view-iso-sw" title="Isométrica desde Muros y Viento SW">Isométrica SW</button>
+    <button class="btn-toolbar" id="btn-view-front" title="Fachada Norte: Acceso, Sol y Puerta">Frente (Norte)</button>
+    <button class="btn-toolbar" id="btn-view-back" title="Fachada Sur: Muro 9m y Tomates">Sur (Muro 9m)</button>
+    <button class="btn-toolbar" id="btn-view-left" title="Lateral Oeste: Pretil de Bloques 1.0m">Oeste (Pretil 1m)</button>
+    <button class="btn-toolbar" id="btn-view-right" title="Lateral Este: Malla Completa">Este (Ventilación)</button>
+    <button class="btn-toolbar" id="btn-view-top" title="Vista de Planta (Cenit)">Planta</button>
+    <div class="separator"></div>
+    <button class="btn-toolbar wind-active" id="btn-toggle-wind" title="Animar dinámica de viento del Suroeste">💨 Viento SW</button>
+    <button class="btn-toolbar" id="btn-xray" title="Alternar transparencia de muros y mallas">Rayos X</button>
+    <button class="btn-toolbar" id="btn-auto-rotate" title="Giro continuo 360°">Giro 360°</button>
+    <button class="btn-toolbar" id="btn-reset" title="Restablecer posición original">Reset</button>
+    <div class="separator"></div>
+    <button class="btn-toolbar" id="btn-open-bom" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); color: #34d399;">
+      📋 Cubicación
+    </button>
+    <a href="cotizacion_mallas_sombreadero.html" target="_blank" class="btn-toolbar" style="background: rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.5); color: #38bdf8; text-decoration: none;">
+      📊 Cotización & ADRs
+    </a>
+    <a href="instructivo_construccion_sombreadero.html" target="_blank" class="btn-toolbar" style="background: rgba(46, 125, 50, 0.25); border-color: rgba(46, 125, 50, 0.6); color: #86efac; text-decoration: none;">
+      📖 Instructivo
+    </a>
+  </div>
+
+  <!-- Tooltip de Inspección de Piezas -->
+  <div id="inspector-tooltip">
+    <strong id="tooltip-title">Solera Base Pino 2×4"</strong>
+    <div class="meta" id="tooltip-meta">3.00 m × 41×90 mm • Pino Seco Cámara</div>
+    <div style="margin-top: 4px; color: #cbd5e1; font-size: 10px;" id="tooltip-desc">
+      Marco perimetral para anclaje y recepción de bancales lastrados.
+    </div>
+    <div class="agro-note" id="tooltip-agro"></div>
+  </div>
+
+  <!-- Drawer Lateral: Cubicación y Especificación Técnica -->
+  <div id="cubicacion-modal">
+    <div class="drawer-header">
+      <div class="drawer-title">📋 Especificación & Cubicación</div>
+      <button class="close-btn" id="btn-close-bom">&times;</button>
+    </div>
+
+    <div class="bom-section" style="border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.06);">
+      <div class="bom-header" style="color: #38bdf8;">0. Límites Físicos & Blindaje Eólico</div>
+      <ul class="bom-list">
+        <li>
+          <span class="saving-tag">Ahorro Malla</span> <strong>Muro Sur Colindante (9.0 m)</strong>:
+          Cortaviento absoluto que neutraliza ráfagas del sur. Al estar adosada la estructura, <em>no requiere malla densa</em> (-6.75 m² de malla economizada).
+        </li>
+        <li>
+          <span class="saving-tag">-50% Carga</span> <strong>Muro Oeste de Bloques (1.0 m)</strong>:
+          Pretil de albañilería que bloquea viento rasante y salinidad. La madera solo requiere malla anti-trips entre +1.00m y +2.12m (-2.0 m² de malla).
+        </li>
+      </ul>
+    </div>
+
+    <div class="bom-section">
+      <div class="bom-header">1. Madera Estructural Dimensionada (Pino Seco)</div>
+      <ul class="bom-list">
+        <li>
+          <span class="qty-tag">6 un</span> <strong>Pino 2×4” × 3.2m</strong> — Chasis base corrido perimetral (Solera Sur 3.0m, Solera Norte 2.4m, Soleras Oeste/Este 2.0m y 2 travesaños interiores portantes).
+        </li>
+        <li>
+          <span class="qty-tag">5 un</span> <strong>Pino 2×4” × 3.2m</strong> — Pilares verticales:
+          3 pilares altos Sur (2.25 m cumbrera), 3 pilares frente Norte (2.00 m) y 1 poste de vano para acceso (2.00 m).
+        </li>
+        <li>
+          <span class="qty-tag">4 un</span> <strong>Pino 2×3” × 3.2m</strong> — Vigas corona y cumbrera (Viga Sur 2.25m, Viga Norte 2.00m y 3 vigas de techo inclinadas ~2.02m con caída 8.3%).
+        </li>
+        <li>
+          <span class="qty-tag">3 un</span> <strong>Pino 2×2” × 3.2m</strong> — Costaneras de techo transversales anti-guateo, dintel vano a 1.85m y tornapuntas diagonales a 45°.
+        </li>
+        <li>
+          <span class="qty-tag">8 un</span> <strong>Pino 1×2” cepillado × 3.2m</strong> — Listones tapajuntas para fijar y aprisionar mallas perimetrales.
+        </li>
+      </ul>
+    </div>
+
+    <div class="bom-section">
+      <div class="bom-header">2. Cerramientos, Mallas & Acceso Norte</div>
+      <ul class="bom-list">
+        <li>
+          <span class="qty-tag">1 paño</span> <strong>Malla Anti-Trips 50 Mesh</strong> — 1.15m × 2.10m para lateral Oeste híbrido (cota +1.00m a +2.12m).
+        </li>
+        <li>
+          <span class="qty-tag">1 paño</span> <strong>Malla Anti-Áfidos 40–50 Mesh</strong> — 2.10m × 2.15m cara Este completa (suelo a techo, entrada de brisa matinal).
+        </li>
+        <li>
+          <span class="qty-tag">1 paño</span> <strong>Malla Frontal Norte Fija</strong> — 2.00m × 2.40m paño fijo ventilado permeable.
+        </li>
+        <li>
+          <span class="qty-tag">1 corte</span> <strong>Malla Sombra 50% / Aluminet</strong> — 2.50m × 3.50m techumbre inclinada con caída Sur → Norte.
+        </li>
+        <li>
+          <span class="qty-tag">1 kit</span> <strong>Cortina Enrollable de Acceso</strong> — Ancho 60cm × Alto 1.85m con velcro industrial perimetral y tubo contrapeso PVC 20mm.
+        </li>
+      </ul>
+    </div>
+
+    <div class="bom-section">
+      <div class="bom-header">3. Lastre por Gravedad & Aislamiento (Sin Perforar Losa)</div>
+      <ul class="bom-list">
+        <li>
+          <span class="qty-tag">400–600 kg</span> <strong>Peso Muerto Distribuido</strong> — 2 bancales longitudinales de madera apoyados sobre los travesaños interiores del chasis:
+          <br>• Bancal Sur Profundo (2.85 × 0.50 × 0.45m): Tomates indeterminados con entutorado vertical a 2.25m.
+          <br>• Bancal Secundario Norte (2.20 × 0.45 × 0.35m): Cultivos de rotación baja.
+        </li>
+        <li>
+          <span class="qty-tag">14 un</span> <strong>Calzos de Neopreno/Goma 10 mm</strong> — Aislamiento hidrófugo continuo bajo solera base para preservar drenaje de azotea.
+        </li>
+        <li>
+          <span class="qty-tag">14 un</span> <strong>Escuadras Galvanizadas Reforzadas 90×90 mm</strong> — Fijaciones anticorrosivas ante ambiente marino.
+        </li>
+      </ul>
+    </div>
+
+    <div style="font-size: 11px; color: #94a3b8; line-height: 1.5; padding: 6px;">
+      💡 <em>La pendiente Sur (2.25m) → Norte (2.00m) hace que las ráfagas costeras del Suroeste sobrepasen el muro de bloques y resbalen tangencialmente sin generar sustentación ni efecto vela.</em>
+    </div>
+  </div>
+
+  <!-- MOTOR THREE.JS -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    /* ==========================================================================
+       1. ESPECIFICACIÓN DECLARATIVA DE ESTRUCTURA Y LÍMITES FÍSICOS
+       ========================================================================== */
+    const SPEC = {
+      dimensiones: {
+        ancho: 3.00,       // X: -1.5 (Oeste) a +1.5 (Este)
+        fondo: 2.00,       // Z: -1.0 (Norte/Frente) a +1.0 (Sur/Muro 9m)
+        altoSur: 2.25,     // Cumbrera en Z = +1.0 (Muro colindante)
+        altoNorte: 2.00,   // Frente en Z = -1.0 (Fachada de acceso y sol)
+        vanoPuerta: 0.60,  // Ancho acceso Norte
+        dintelPuerta: 1.85,// Altura de paso libre
+        altoPretilOeste: 1.00, // Muro de bloques de hormigón
+        altoMuroSur: 9.00,     // Muro colindante vecino cortaviento
+        despejePiso: 0.010     // Calzos goma/neopreno 10mm
+      },
+      secciones: {
+        pino2x4: { w: 0.041, h: 0.090 },
+        pino2x3: { w: 0.041, h: 0.065 },
+        pino2x2: { w: 0.041, h: 0.041 },
+        pino1x2: { w: 0.019, h: 0.041 },
+        pvc20mm: { r: 0.010 }
+      },
+      colores: {
+        madera: 0xc8965d,
+        maderaAristas: 0x5a3d24,
+        mallaOeste: 0x38bdf8,
+        mallaEste: 0x94a3b8,
+        mallaNorte: 0xe2e8f0,
+        mallaTecho: 0x15803d,
+        muroVecino: 0x334155,
+        bloquesHormigon: 0x475569,
+        metalGalv: 0x94a3b8,
+        neopreno: 0x0f172a,
+        puerta: 0x0284c7,
+        cota: 0xfacc15,
+        sustrato: 0x3b271a,
+        follaje: 0x16a34a,
+        fruto: 0xef4444
+      }
+    };
+
+    /* ==========================================================================
+       2. Structure3DEngine PROFUNDO: THREE.JS + FÍSICA AERODINÁMICA
+       ========================================================================== */
+    class Structure3DEngine {
+      constructor(containerId, gizmoContainerId) {
+        this.container = document.getElementById(containerId);
+        this.gizmoContainer = document.getElementById(gizmoContainerId);
+
+        // Capas y Grupos de Escena
+        this.groups = {
+          wallSouth: new THREE.Group(),
+          wallWest: new THREE.Group(),
+          wood: new THREE.Group(),
+          meshWalls: new THREE.Group(),
+          meshRoof: new THREE.Group(),
+          door: new THREE.Group(),
+          ballast: new THREE.Group(),
+          plants: new THREE.Group(),
+          wind: new THREE.Group(),
+          dimensions: new THREE.Group(),
+          human: new THREE.Group()
+        };
+
+        this.raycastableObjects = [];
+        this.xrayMode = false;
+        this.autoRotate = false;
+        this.windActive = true;
+        this.windParticles = [];
+
+        this.initMainScene();
+        this.initGizmoScene();
+        this.buildAll();
+        this.setupWindSimulation();
+        this.setupEventListeners();
+        this.animate();
+      }
+
+      initMainScene() {
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x070b12);
+        this.scene.fog = new THREE.FogExp2(0x070b12, 0.035);
+
+        // Cámara inicial en isométrica mirando hacia Norte/Este (acceso)
+        this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+        this.camera.position.set(4.6, 3.8, -4.8);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.15;
+        this.container.appendChild(this.renderer.domElement);
+
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.target.set(0, 1.1, 0);
+        this.controls.maxPolarAngle = Math.PI / 2 + 0.02;
+        this.controls.minDistance = 1.6;
+        this.controls.maxDistance = 22.0;
+
+        // Iluminación Solar calibrada (Sol incidente del Norte/Cenit)
+        const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+        this.scene.add(ambient);
+
+        // Sol del Norte (incidencia solar óptima para cultivo en hemisferio sur)
+        this.sunLight = new THREE.DirectionalLight(0xfffbeb, 2.4);
+        this.sunLight.position.set(2, 8, -6);
+        this.sunLight.castShadow = true;
+        this.sunLight.shadow.mapSize.width = 2048;
+        this.sunLight.shadow.mapSize.height = 2048;
+        this.sunLight.shadow.bias = -0.0001;
+        this.sunLight.shadow.camera.near = 0.5;
+        this.sunLight.shadow.camera.far = 30;
+        this.sunLight.shadow.camera.left = -6;
+        this.sunLight.shadow.camera.right = 6;
+        this.sunLight.shadow.camera.top = 7;
+        this.sunLight.shadow.camera.bottom = -5;
+        this.scene.add(this.sunLight);
+
+        // Luz secundaria de relleno ambiental
+        const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+        fillLight.position.set(-6, 5, 4);
+        this.scene.add(fillLight);
+
+        // Suelo y Losa de Azotea
+        this.buildGroundFloor();
+
+        // Anexar grupos
+        Object.values(this.groups).forEach(g => this.scene.add(g));
+      }
+
+      initGizmoScene() {
+        this.gizmoScene = new THREE.Scene();
+        this.gizmoCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 20);
+        this.gizmoRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.gizmoRenderer.setSize(120, 120);
+        this.gizmoContainer.appendChild(this.gizmoRenderer.domElement);
+
+        this.gizmoScene.add(new THREE.AmbientLight(0xffffff, 1.2));
+        const dir = new THREE.DirectionalLight(0xffffff, 1.5);
+        dir.position.set(2, 4, 3);
+        this.gizmoScene.add(dir);
+
+        const gizmoGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        const materials = [
+          this.createGizmoFaceMaterial('+X', 'ESTE', '#3b82f6'),
+          this.createGizmoFaceMaterial('-X', 'OESTE (Pretil)', '#38bdf8'),
+          this.createGizmoFaceMaterial('+Y', 'CENIT', '#10b981'),
+          this.createGizmoFaceMaterial('-Y', 'LOSA', '#475569'),
+          this.createGizmoFaceMaterial('+Z', 'SUR (Muro 9m)', '#64748b'),
+          this.createGizmoFaceMaterial('-Z', 'NORTE (Sol/Acceso)', '#ef4444')
+        ];
+        this.gizmoCube = new THREE.Mesh(gizmoGeo, materials);
+        this.gizmoScene.add(this.gizmoCube);
+
+        const axes = new THREE.AxesHelper(1.8);
+        this.gizmoScene.add(axes);
+      }
+
+      createGizmoFaceMaterial(axis, label, color) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128; canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0a101f';
+        ctx.fillRect(0, 0, 128, 128);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 5;
+        ctx.strokeRect(3, 3, 122, 122);
+        ctx.fillStyle = color;
+        ctx.font = 'bold 34px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(axis, 64, 46);
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 15px Inter, sans-serif';
+        ctx.fillText(label, 64, 88);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 });
+      }
+
+      buildGroundFloor() {
+        // Losa de Hormigón de Azotea
+        const slabGeo = new THREE.BoxGeometry(7.0, 0.12, 6.0);
+        const slabMat = new THREE.MeshStandardMaterial({
+          color: 0x161f30, roughness: 0.95, metalness: 0.05
+        });
+        const slab = new THREE.Mesh(slabGeo, slabMat);
+        slab.position.set(0, -0.06, 0.3);
+        slab.receiveShadow = true;
+        this.scene.add(slab);
+
+        const grid = new THREE.GridHelper(7, 14, 0x10b981, 0x1e293b);
+        grid.position.y = 0.001;
+        this.scene.add(grid);
+
+        // Rosa Cardinal en Losa
+        this.buildCompass();
+      }
+
+      buildCompass() {
+        const compassGroup = new THREE.Group();
+        compassGroup.position.set(0, 0.003, 0);
+
+        const ringGeo = new THREE.RingGeometry(2.3, 2.34, 64);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x334155, side: THREE.DoubleSide });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        compassGroup.add(ring);
+
+        // Flecha Norte (Apuntando a Z = -1.0 / Frente Solar y Acceso)
+        const northArrow = new THREE.ArrowHelper(
+          new THREE.Vector3(0, 0, -1),
+          new THREE.Vector3(0, 0.005, 0),
+          2.3, 0xef4444, 0.3, 0.18
+        );
+        compassGroup.add(northArrow);
+
+        // Flecha Viento SW predominante
+        const windDir = new THREE.Vector3(1, 0, -1).normalize();
+        const windArrow = new THREE.ArrowHelper(
+          windDir, new THREE.Vector3(-2.2, 0.005, 2.0),
+          1.6, 0x38bdf8, 0.25, 0.15
+        );
+        compassGroup.add(windArrow);
+
+        const createCardinalBadge = (text, x, z, color = '#94a3b8') => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 190; canvas.height = 64;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'rgba(10, 16, 31, 0.9)';
+          ctx.beginPath();
+          ctx.roundRect(4, 4, 182, 56, 12);
+          ctx.fill();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.fillStyle = color;
+          ctx.font = 'bold 24px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(text, 95, 32);
+
+          const tex = new THREE.CanvasTexture(canvas);
+          const spriteMat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+          const sprite = new THREE.Sprite(spriteMat);
+          sprite.position.set(x, 0.14, z);
+          sprite.scale.set(0.85, 0.3, 1);
+          return sprite;
+        };
+
+        compassGroup.add(createCardinalBadge('NORTE ▲ (Sol)', 0, -2.65, '#ef4444'));
+        compassGroup.add(createCardinalBadge('SUR ▼ (Muro 9m)', 0, 2.65, '#94a3b8'));
+        compassGroup.add(createCardinalBadge('ESTE ▶ (Brisa)', 2.75, 0, '#34d399'));
+        compassGroup.add(createCardinalBadge('◀ OESTE (Pretil 1m)', -2.85, 0, '#38bdf8'));
+
+        this.scene.add(compassGroup);
+      }
+
+      /* ==========================================================================
+         3. CONSTRUCCIÓN DE LÍMITES FÍSICOS MACIZOS, MADERA Y AGRONOMÍA
+         ========================================================================== */
+      buildAll() {
+        const halfX = SPEC.dimensiones.ancho / 2; // 1.5m
+        const halfZ = SPEC.dimensiones.fondo / 2; // 1.0m
+        const yBase = SPEC.dimensiones.despejePiso + SPEC.secciones.pino2x4.h / 2; // 0.055m
+
+        // Materiales
+        this.woodMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.madera, roughness: 0.72, metalness: 0.05
+        });
+        this.metalMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.metalGalv, roughness: 0.25, metalness: 0.85
+        });
+        this.neopreneMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.neopreno, roughness: 0.9, metalness: 0.1
+        });
+
+        // 1. Límites Físicos Macizos
+        this.buildPhysicalBoundaries(halfX, halfZ);
+
+        // 2. Chasis y Madera
+        this.buildWoodStructure(halfX, halfZ, yBase);
+
+        // 3. Cerramientos Híbridos & Malla Sombra
+        this.buildCoverings(halfX, halfZ, yBase);
+
+        // 4. Bancales de Lastre (400–600 kg) y Tomates Indeterminados
+        this.buildBallastAndCrops(halfX, halfZ, yBase);
+
+        // 5. Escala Humana y Cotas
+        this.buildHumanScale(halfX - 0.3, -halfZ - 0.65);
+        this.buildDimensions(halfX, halfZ, yBase);
+      }
+
+      // A. Muros Macizos: Sur (9m) y Oeste (1.0m)
+      buildPhysicalBoundaries(halfX, halfZ) {
+        // --- Fachada Sur: Muro colindante de 9 metros ---
+        const wallSouthGeo = new THREE.BoxGeometry(SPEC.dimensiones.ancho + 1.2, SPEC.dimensiones.altoMuroSur, 0.25);
+        this.wallSouthMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.muroVecino,
+          roughness: 0.85,
+          metalness: 0.15
+        });
+        const wallSouth = new THREE.Mesh(wallSouthGeo, this.wallSouthMat);
+        // Ubicado inmediatamente adosado a la estructura trasera (Z = +halfZ + 0.14)
+        wallSouth.position.set(0, SPEC.dimensiones.altoMuroSur / 2, halfZ + 0.14);
+        wallSouth.castShadow = true;
+        wallSouth.receiveShadow = true;
+
+        // Remate hojalatería superior
+        const copingGeo = new THREE.BoxGeometry(SPEC.dimensiones.ancho + 1.3, 0.08, 0.32);
+        const copingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.6, roughness: 0.3 });
+        const coping = new THREE.Mesh(copingGeo, copingMat);
+        coping.position.set(0, SPEC.dimensiones.altoMuroSur + 0.04, halfZ + 0.14);
+        this.groups.wallSouth.add(coping);
+
+        wallSouth.userData = {
+          name: 'Muro Colindante Vecino (Fachada Sur)',
+          meta: 'Albañilería/Hormigón • Altura 9.0 m • Cortaviento Absoluto',
+          desc: 'Neutraliza ráfagas eólicas y turbulencias del cuadrante sur. Alberga la cumbrera del techo a 2.25 m sin requerir malla posterior (ahorro material y nula resistencia al aire).'
+        };
+        this.raycastableObjects.push(wallSouth);
+        this.groups.wallSouth.add(wallSouth);
+
+        // --- Fachada Oeste: Muro de bloques de 1.0 m (Pretil) ---
+        const wallWestGeo = new THREE.BoxGeometry(0.18, SPEC.dimensiones.altoPretilOeste, SPEC.dimensiones.fondo + 0.3);
+        this.wallWestMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.bloquesHormigon,
+          roughness: 0.9,
+          metalness: 0.08
+        });
+        const wallWest = new THREE.Mesh(wallWestGeo, this.wallWestMat);
+        wallWest.position.set(-halfX - 0.11, SPEC.dimensiones.altoPretilOeste / 2, 0.05);
+        wallWest.castShadow = true;
+        wallWest.receiveShadow = true;
+
+        // Albardilla de remate del pretil
+        const westCopingGeo = new THREE.BoxGeometry(0.24, 0.04, SPEC.dimensiones.fondo + 0.34);
+        const westCoping = new THREE.Mesh(westCopingGeo, copingMat);
+        westCoping.position.set(-halfX - 0.11, SPEC.dimensiones.altoPretilOeste + 0.02, 0.05);
+        this.groups.wallWest.add(westCoping);
+
+        wallWest.userData = {
+          name: 'Muro de Bloques Pretil (Fachada Oeste)',
+          meta: 'Bloques de Hormigón • Altura 1.00 m • Cota +1.00 m',
+          desc: 'Frena la salinidad directa y el viento costero rasante de la tarde. Protege el sustrato y contenedores de la deshidratación. Reduce un 50% la superficie expuesta a carga eólica.'
+        };
+        this.raycastableObjects.push(wallWest);
+        this.groups.wallWest.add(wallWest);
+      }
+
+      // B. Estructura de Madera (Pino 2×4", 2×3", 2×2")
+      buildWoodStructure(halfX, halfZ, yBase) {
+        const sec2x4 = SPEC.secciones.pino2x4;
+        const sec2x3 = SPEC.secciones.pino2x3;
+        const sec2x2 = SPEC.secciones.pino2x2;
+        const sec1x2 = SPEC.secciones.pino1x2;
+        const hSur = SPEC.dimensiones.altoSur;     // 2.25m (cumbrera)
+        const hNorte = SPEC.dimensiones.altoNorte; // 2.00m (frente)
+        const vanoP = SPEC.dimensiones.vanoPuerta; // 0.60m
+
+        // 1. Calzos de Neopreno 10mm bajo soleras
+        const calzoPoints = [
+          [-halfX, -halfZ], [0, -halfZ], [halfX, -halfZ],
+          [-halfX, halfZ], [0, halfZ], [halfX, halfZ],
+          [-halfX, 0], [halfX, 0],
+          [-0.75, 0], [0.75, 0]
+        ];
+        calzoPoints.forEach(([cx, cz]) => {
+          const calzo = new THREE.Mesh(
+            new THREE.BoxGeometry(0.12, SPEC.dimensiones.despejePiso, 0.12),
+            this.neopreneMat
+          );
+          calzo.position.set(cx, SPEC.dimensiones.despejePiso / 2, cz);
+          this.groups.wood.add(calzo);
+        });
+
+        // 2. Solera Perimetral Corrida (Chasis de piso)
+        // Solera Sur (3.0 m) adosada al muro 9m
+        this.addWoodBeam({
+          name: 'Solera Base Sur (Pino 2×4")',
+          meta: '3.00 m × 41×90 mm • Chasis Base Corrido',
+          desc: 'Pieza base posterior que amarra los 3 pilares cumbrera de 2.25m y soporta el bancal profundo.',
+          geo: [SPEC.dimensiones.ancho, sec2x4.h, sec2x4.w],
+          pos: [0, yBase, halfZ]
+        });
+
+        // Solera Norte (Frontal) - con vano de puerta de 60 cm libre en extremo derecho
+        const anchoSoleraNorte = SPEC.dimensiones.ancho - vanoP;
+        this.addWoodBeam({
+          name: 'Solera Base Frontal Norte (Pino 2×4")',
+          meta: `${anchoSoleraNorte.toFixed(2)} m × 41×90 mm • Base Frontal`,
+          desc: 'Solera frontal que remata en el umbral del vano de acceso para paso libre a nivel de piso.',
+          geo: [anchoSoleraNorte, sec2x4.h, sec2x4.w],
+          pos: [-vanoP / 2, yBase, -halfZ]
+        });
+
+        // Soleras Laterales Oeste y Este (2.0 m)
+        this.addWoodBeam({
+          name: 'Solera Lateral Oeste (Pino 2×4")',
+          meta: '2.00 m × 41×90 mm • Base Lateral Pretil',
+          desc: 'Solera anclada al chasis junto al muro de bloques de 1.0 m.',
+          geo: [sec2x4.w, sec2x4.h, SPEC.dimensiones.fondo],
+          pos: [-halfX, yBase, 0]
+        });
+
+        this.addWoodBeam({
+          name: 'Solera Lateral Este (Pino 2×4")',
+          meta: '2.00 m × 41×90 mm • Base Lateral Abierta',
+          desc: 'Solera perimetral en la cara este permeable a brisas matinales.',
+          geo: [sec2x4.w, sec2x4.h, SPEC.dimensiones.fondo],
+          pos: [halfX, yBase, 0]
+        });
+
+        // Travesaños interiores portantes de lastre
+        [-0.75, 0.75].forEach((tx, idx) => {
+          this.addWoodBeam({
+            name: `Travesaño de Lastre #${idx + 1} (Pino 2×4")`,
+            meta: '1.92 m × 41×90 mm • Soporte Peso Muerto',
+            desc: 'Travesaño interior que recibe los bancales con sustrato húmedo (400 a 600 kg).',
+            geo: [sec2x4.w, sec2x4.h, SPEC.dimensiones.fondo - (sec2x4.w * 2)],
+            pos: [tx, yBase, 0]
+          });
+        });
+
+        // 3. Pilares Verticales
+        // 3 Pilares Sur (Cumbrera a 2.25 m) en Z = +halfZ
+        [-halfX, 0, halfX].forEach((px, idx) => {
+          const names = ['Oeste', 'Central', 'Este'];
+          this.addWoodBeam({
+            name: `Pilar Sur ${names[idx]} (Cumbrera 2.25 m)`,
+            meta: `Pino 2×4” × ${hSur} m • Soporte Alto Trasero`,
+            desc: 'Pilar más alto de la estructura adosado al muro de 9 m, fijando la cumbrera del techo a un agua.',
+            geo: [sec2x4.w, hSur, sec2x4.h],
+            pos: [px, yBase + hSur / 2, halfZ]
+          });
+        });
+
+        // 3 Pilares Norte (Frente a 2.00 m) en Z = -halfZ
+        [-halfX, 0, halfX].forEach((px, idx) => {
+          const names = ['Oeste', 'Central', 'Este'];
+          this.addWoodBeam({
+            name: `Pilar Norte ${names[idx]} (Frente 2.00 m)`,
+            meta: `Pino 2×4” × ${hNorte} m • Fachada Frontal Solar`,
+            desc: 'Pilar frontal que recibe la mayor radiación solar incidente del norte.',
+            geo: [sec2x4.w, hNorte, sec2x4.h],
+            pos: [px, yBase + hNorte / 2, -halfZ]
+          });
+        });
+
+        // Poste de Vano de Puerta en Fachada Norte (Z = -halfZ, a 60cm de la esquina este)
+        const xPostePuerta = halfX - vanoP;
+        this.addWoodBeam({
+          name: 'Poste Marco de Acceso Norte',
+          meta: `Pino 2×4” × ${hNorte} m • Vano de Entrada 60cm`,
+          desc: 'Delimita el vano de acceso para la cortina enrollable de velcro.',
+          geo: [sec2x4.w, hNorte, sec2x4.h],
+          pos: [xPostePuerta, yBase + hNorte / 2, -halfZ]
+        });
+
+        // Dintel Horizontal del Vano a 1.85 m
+        this.addWoodBeam({
+          name: 'Dintel Superior Vano de Acceso',
+          meta: 'Pino 2×2” × 0.60 m • Cota +1.85 m',
+          desc: 'Dintel que fija el rollo y velcro superior de la puerta de acceso.',
+          geo: [vanoP, sec2x2.h, sec2x2.w],
+          pos: [halfX - (vanoP / 2), yBase + SPEC.dimensiones.dintelPuerta, -halfZ]
+        });
+
+        // 4. Vigas Corona y Techumbre a un Agua (Caída Sur 2.25m → Norte 2.00m)
+        // Viga Corona Sur (Cumbrera 2.25 m)
+        this.addWoodBeam({
+          name: 'Viga Corona Cumbrera Sur (Pino 2×3")',
+          meta: `3.00 m × 41×65 mm • Cumbrera Cota +${hSur} m`,
+          desc: 'Amarra los 3 pilares altos traseros adosados al muro de 9 m.',
+          geo: [SPEC.dimensiones.ancho, sec2x3.h, sec2x3.w],
+          pos: [0, yBase + hSur, halfZ]
+        });
+
+        // Viga Corona Norte (Frente 2.00 m)
+        this.addWoodBeam({
+          name: 'Viga Corona Frontal Norte (Pino 2×3")',
+          meta: `3.00 m × 41×65 mm • Cota +${hNorte} m`,
+          desc: 'Viga delantera que remata la pendiente del techo.',
+          geo: [SPEC.dimensiones.ancho, sec2x3.h, sec2x3.w],
+          pos: [0, yBase + hNorte, -halfZ]
+        });
+
+        // Vigas Inclinadas de Techo (Caída Sur → Norte)
+        const dY = hSur - hNorte; // 0.25 m
+        const dZ = SPEC.dimensiones.fondo; // 2.00 m
+        const angleRoof = Math.atan2(dY, dZ);
+        const lengthRafter = Math.sqrt(dY * dY + dZ * dZ); // ~2.015 m
+        const yMidRoof = yBase + (hSur + hNorte) / 2;
+
+        [-halfX, 0, halfX].forEach((rx, idx) => {
+          const names = ['Oeste', 'Central', 'Este'];
+          this.addWoodBeam({
+            name: `Tirante Techo Inclinado (${names[idx]})`,
+            meta: `Pino 2×3” × ${lengthRafter.toFixed(2)} m • Pendiente ~8%`,
+            desc: 'Tirante inclinado con caída hacia el norte que evacúa el viento tangencialmente sin embolsarse.',
+            geo: [sec2x3.w, sec2x3.h, lengthRafter],
+            pos: [rx, yMidRoof, 0],
+            rot: [-angleRoof, 0, 0]
+          });
+        });
+
+        // Costaneras Transversales Interiores (Anti-guateo)
+        [-0.33, 0.33].forEach((zRel, idx) => {
+          const yPos = yMidRoof + (zRel * dY);
+          this.addWoodBeam({
+            name: `Costanera Antiguateo #${idx + 1}`,
+            meta: 'Pino 2×2” × 3.0 m • Soporte Malla Techo',
+            desc: 'Previene bolsas de agua o combamiento de la malla sombra ante ráfagas.',
+            geo: [SPEC.dimensiones.ancho, sec2x2.h, sec2x2.w],
+            pos: [0, yPos + 0.03, zRel],
+            rot: [-angleRoof, 0, 0]
+          });
+        });
+
+        // Tornapuntas Diagonales a 45°
+        const braceLength = 0.55;
+        const braceAngle = Math.PI / 4;
+        const braceConfigs = [
+          { pos: [-halfX, yBase + hSur - 0.22, halfZ - 0.22], rot: [-braceAngle, 0, 0], name: 'Tornapunta Superior Sur-Oeste' },
+          { pos: [-halfX, yBase + hNorte - 0.22, -halfZ + 0.22], rot: [braceAngle, 0, 0], name: 'Tornapunta Superior Norte-Oeste' },
+          { pos: [halfX, yBase + hSur - 0.22, halfZ - 0.22], rot: [-braceAngle, 0, 0], name: 'Tornapunta Superior Sur-Este' },
+          { pos: [halfX, yBase + hNorte - 0.22, -halfZ + 0.22], rot: [braceAngle, 0, 0], name: 'Tornapunta Superior Norte-Este' },
+          { pos: [-halfX + 0.25, yBase + hSur - 0.22, halfZ], rot: [0, 0, -braceAngle], name: 'Tornapunta Frontal Esquina Sur-Oeste' },
+          { pos: [halfX - 0.25, yBase + hSur - 0.22, halfZ], rot: [0, 0, braceAngle], name: 'Tornapunta Frontal Esquina Sur-Este' }
+        ];
+
+        braceConfigs.forEach(bc => {
+          this.addWoodBeam({
+            name: bc.name,
+            meta: 'Pino 2×2” × 0.55 m • Arriostramiento 45°',
+            desc: 'Refuerzo diagonal rígido que resiste el empuje lateral del viento.',
+            geo: [sec2x2.w, sec2x2.h, braceLength],
+            pos: bc.pos,
+            rot: bc.rot
+          });
+        });
+
+        // Escuadras Galvanizadas en Uniones Críticas
+        const cornerEscuadras = [
+          [-halfX + 0.05, yBase + 0.06, halfZ - 0.05],
+          [halfX - 0.05, yBase + 0.06, halfZ - 0.05],
+          [-halfX + 0.05, yBase + 0.06, -halfZ + 0.05],
+          [halfX - 0.05, yBase + 0.06, -halfZ + 0.05],
+          [0, yBase + 0.06, halfZ - 0.05],
+          [0, yBase + 0.06, -halfZ + 0.05],
+          [-halfX + 0.05, yBase + hSur - 0.06, halfZ - 0.05],
+          [halfX - 0.05, yBase + hSur - 0.06, halfZ - 0.05],
+          [-halfX + 0.05, yBase + hNorte - 0.06, -halfZ + 0.05],
+          [halfX - 0.05, yBase + hNorte - 0.06, -halfZ + 0.05]
+        ];
+
+        cornerEscuadras.forEach(([ex, ey, ez]) => {
+          const escuadra = new THREE.Mesh(
+            new THREE.BoxGeometry(0.08, 0.08, 0.08),
+            this.metalMat
+          );
+          escuadra.position.set(ex, ey, ez);
+          this.groups.wood.add(escuadra);
+        });
+      }
+
+      addWoodBeam({ name, meta, desc, geo, pos, rot = [0, 0, 0] }) {
+        const geometry = new THREE.BoxGeometry(geo[0], geo[1], geo[2]);
+        const mesh = new THREE.Mesh(geometry, this.woodMat);
+        mesh.position.set(pos[0], pos[1], pos[2]);
+        mesh.rotation.set(rot[0], rot[1], rot[2]);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        const edges = new THREE.EdgesGeometry(geometry);
+        const lineMat = new THREE.LineBasicMaterial({
+          color: SPEC.colores.maderaAristas, transparent: true, opacity: 0.35
+        });
+        const line = new THREE.LineSegments(edges, lineMat);
+        mesh.add(line);
+
+        mesh.userData = { name, meta, desc };
+        this.raycastableObjects.push(mesh);
+        this.groups.wood.add(mesh);
+        return mesh;
+      }
+
+      // C. Cerramientos, Mallas Híbridas & Puerta Velcro
+      buildCoverings(halfX, halfZ, yBase) {
+        const hSur = SPEC.dimensiones.altoSur;     // 2.25 m
+        const hNorte = SPEC.dimensiones.altoNorte; // 2.00 m
+        const vanoP = SPEC.dimensiones.vanoPuerta; // 0.60 m
+        const dY = hSur - hNorte; // 0.25 m
+        const dZ = SPEC.dimensiones.fondo; // 2.00 m
+        const angleRoof = Math.atan2(dY, dZ);
+        const lengthRafter = Math.sqrt(dY * dY + dZ * dZ);
+
+        // Materiales de Malla
+        this.meshWallMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.mallaNorte, transparent: true, opacity: 0.35,
+          side: THREE.DoubleSide, roughness: 0.85
+        });
+
+        this.meshOesteMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.mallaOeste, transparent: true, opacity: 0.38,
+          side: THREE.DoubleSide, roughness: 0.85
+        });
+
+        this.meshRoofMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.mallaTecho, transparent: true, opacity: 0.45,
+          side: THREE.DoubleSide, roughness: 0.9
+        });
+
+        // 1. FACHADA SUR: Sin malla densa (adosada al muro de 9 m) -> Ahorro demostrado
+
+        // 2. FACHADA OESTE: Cerramiento Híbrido (+1.00m a +2.12m)
+        // Trapecio superior sobre el muro de bloques de 1.0 m
+        const hWestWall = SPEC.dimensiones.altoPretilOeste; // 1.00 m
+        const westShape = new THREE.Shape();
+        westShape.moveTo(-halfZ, hWestWall); // Norte (Z = -1.0, Y = 1.00)
+        westShape.lineTo(halfZ, hWestWall);  // Sur (Z = +1.0, Y = 1.00)
+        westShape.lineTo(halfZ, hSur);       // Sur (Z = +1.0, Y = 2.25)
+        westShape.lineTo(-halfZ, hNorte);    // Norte (Z = -1.0, Y = 2.00)
+        westShape.closePath();
+
+        const westGeo = new THREE.ShapeGeometry(westShape);
+        const westMesh = new THREE.Mesh(westGeo, this.meshOesteMat);
+        westMesh.position.set(-halfX, yBase, 0);
+        westMesh.rotation.y = Math.PI / 2;
+        westMesh.userData = {
+          name: 'Malla Anti-Trips Lateral Oeste (Híbrida)',
+          meta: '50 Mesh • Cota +1.00 m a +2.12 m (Sobre Pretil)',
+          desc: 'Solo cubre el 50% superior gracias al muro de bloques. Filtra insectos al tiempo que disipa el viento tangencial sin sobrecargar la estructura.'
+        };
+        this.raycastableObjects.push(westMesh);
+        this.groups.meshWalls.add(westMesh);
+
+        // 3. FACHADA ESTE: Suelo a Techo completa (40–50 mesh)
+        const eastShape = new THREE.Shape();
+        eastShape.moveTo(-halfZ, 0);
+        eastShape.lineTo(halfZ, 0);
+        eastShape.lineTo(halfZ, hSur);
+        eastShape.lineTo(-halfZ, hNorte);
+        eastShape.closePath();
+
+        const eastGeo = new THREE.ShapeGeometry(eastShape);
+        const eastMesh = new THREE.Mesh(eastGeo, this.meshWallMat);
+        eastMesh.position.set(halfX, yBase, 0);
+        eastMesh.rotation.y = -Math.PI / 2;
+        eastMesh.userData = {
+          name: 'Malla Anti-Áfidos Lateral Este',
+          meta: '40–50 Mesh • Suelo a Techo (2.00 × 2.00–2.25 m)',
+          desc: 'Cara completamente permeable a la brisa suave matinal del este, favoreciendo la ventilación cruzada pasiva hacia el norte.'
+        };
+        this.raycastableObjects.push(eastMesh);
+        this.groups.meshWalls.add(eastMesh);
+
+        // 4. FACHADA NORTE: Paño Fijo Permeable (2.40 m × 2.00 m)
+        const anchoFijoNorte = SPEC.dimensiones.ancho - vanoP;
+        const northGeo = new THREE.PlaneGeometry(anchoFijoNorte, hNorte);
+        const northMesh = new THREE.Mesh(northGeo, this.meshWallMat);
+        northMesh.position.set(-vanoP / 2, yBase + hNorte / 2, -halfZ);
+        northMesh.userData = {
+          name: 'Malla Permeable Frontal Norte',
+          meta: `Anti-insectos • ${anchoFijoNorte.toFixed(2)} × 2.00 m`,
+          desc: 'Recibe la radiación solar incidente directa del norte y permite la salida de ventilación cruzada.'
+        };
+        this.raycastableObjects.push(northMesh);
+        this.groups.meshWalls.add(northMesh);
+
+        // 5. TECHUMBRE: Malla Sombra 50% con Caída Sur → Norte (~8%)
+        const roofGeo = new THREE.PlaneGeometry(SPEC.dimensiones.ancho + 0.08, lengthRafter + 0.08);
+        const roofMesh = new THREE.Mesh(roofGeo, this.meshRoofMat);
+        roofMesh.position.set(0, yBase + (hSur + hNorte) / 2 + 0.04, 0);
+        roofMesh.rotation.x = Math.PI / 2 - angleRoof;
+        roofMesh.userData = {
+          name: 'Malla Sombra 50% / Aluminet (Techumbre)',
+          meta: '3.00 × 2.02 m • Pendiente Sur → Norte ~8.3%',
+          desc: 'El viento costero del suroeste resbala tangencialmente por la pendiente descendente sin generar sustentación ascensional ni embolsamiento.'
+        };
+        this.raycastableObjects.push(roofMesh);
+        this.groups.meshRoof.add(roofMesh);
+
+        // 6. PUERTA ENROLLABLE CON VELCRO (Acceso Norte a 1.85 m)
+        this.buildRollupDoor(halfX, halfZ, yBase, vanoP, SPEC.dimensiones.dintelPuerta);
+      }
+
+      buildRollupDoor(halfX, halfZ, yBase, doorW, dintelH) {
+        const xPos = halfX - (doorW / 2);
+        const doorMat = new THREE.MeshStandardMaterial({
+          color: SPEC.colores.puerta, transparent: true, opacity: 0.6, side: THREE.DoubleSide
+        });
+
+        // Cortina enrollada superior en dintel (1.85 m)
+        const rollGeo = new THREE.CylinderGeometry(0.04, 0.04, doorW - 0.02, 16);
+        const rollMesh = new THREE.Mesh(rollGeo, doorMat);
+        rollMesh.position.set(xPos, yBase + dintelH - 0.04, -halfZ - 0.02);
+        rollMesh.rotation.z = Math.PI / 2;
+        this.groups.door.add(rollMesh);
+
+        // Cortina flexible desplegada parcialmente
+        const curtainH = dintelH * 0.75;
+        const curtainGeo = new THREE.PlaneGeometry(doorW - 0.02, curtainH);
+        const curtain = new THREE.Mesh(curtainGeo, doorMat);
+        curtain.position.set(xPos, yBase + dintelH - (curtainH / 2) - 0.04, -halfZ - 0.01);
+        curtain.userData = {
+          name: 'Cortina Enrollable Flexible con Velcro',
+          meta: 'Vano 60 cm × Dintel 1.85 m • Velcro Perimetral',
+          desc: 'Cierre hermético rápido sin bisagras mecánicas expuestas al óxido o desgarro por ráfagas.'
+        };
+        this.raycastableObjects.push(curtain);
+        this.groups.door.add(curtain);
+
+        // Tubo de PVC de contrapeso inferior
+        const pipeGeo = new THREE.CylinderGeometry(0.01, 0.01, doorW + 0.02, 16);
+        const pipeMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 });
+        const pipe = new THREE.Mesh(pipeGeo, pipeMat);
+        pipe.position.set(xPos, yBase + dintelH - curtainH - 0.04, -halfZ - 0.01);
+        pipe.rotation.z = Math.PI / 2;
+        this.groups.door.add(pipe);
+      }
+
+      // D. Bancales de Lastre (400–600 kg) & Tomates Indeterminados
+      buildBallastAndCrops(halfX, halfZ, yBase) {
+        const soilMat = new THREE.MeshStandardMaterial({ color: SPEC.colores.sustrato, roughness: 0.95 });
+        const planterWoodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
+        const plantMat = new THREE.MeshStandardMaterial({ color: SPEC.colores.follaje, roughness: 0.6 });
+        const tomatoMat = new THREE.MeshStandardMaterial({ color: SPEC.colores.fruto, roughness: 0.3 });
+        const stringMat = new THREE.LineBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.7 });
+
+        // 1. BANCAL SUR PROFUNDO (Tomates Indeterminados con Entutorado a 2.25m)
+        // 2.85 m de largo × 0.50 m de ancho × 0.42 m de alto
+        const southBoxW = SPEC.dimensiones.ancho - 0.15;
+        const southBoxD = 0.50;
+        const southBoxH = 0.42;
+        const southBoxGeo = new THREE.BoxGeometry(southBoxW, southBoxH, southBoxD);
+        const southBox = new THREE.Mesh(southBoxGeo, planterWoodMat);
+        // Ubicado contra el muro Sur (Z = halfZ - 0.30)
+        southBox.position.set(0, yBase + southBoxH / 2, halfZ - southBoxD / 2 - 0.05);
+        southBox.castShadow = true;
+        southBox.receiveShadow = true;
+
+        // Sustrato húmedo pesado
+        const soilSur = new THREE.Mesh(new THREE.PlaneGeometry(southBoxW - 0.04, southBoxD - 0.04), soilMat);
+        soilSur.rotation.x = -Math.PI / 2;
+        soilSur.position.set(0, southBoxH / 2 - 0.02, 0);
+        southBox.add(soilSur);
+
+        southBox.userData = {
+          name: 'Bancal Profundo Sur (Lastre ~320 kg)',
+          meta: '2.85 × 0.50 × 0.42 m • Sustrato Húmedo de Alto Volumen',
+          desc: 'Aporta lastre gravitacional crítico. Alberga 6 matas de tomates indeterminados aprovechando la altura libre de 2.25 m para entutorado vertical.'
+        };
+        this.raycastableObjects.push(southBox);
+        this.groups.ballast.add(southBox);
+
+        // Entutorado vertical y Tomates Indeterminados (6 plantas a lo largo del bancal Sur)
+        const plantCount = 6;
+        const xStart = -southBoxW / 2 + 0.25;
+        const xStep = (southBoxW - 0.5) / (plantCount - 1);
+        const zPlant = halfZ - southBoxD / 2 - 0.05;
+
+        for (let i = 0; i < plantCount; i++) {
+          const px = xStart + i * xStep;
+
+          // Cuerda de entutorado vertical desde bancal (Y=0.45) hasta cumbrera (Y=2.25)
+          const points = [
+            new THREE.Vector3(px, yBase + southBoxH, zPlant),
+            new THREE.Vector3(px, yBase + SPEC.dimensiones.altoSur - 0.05, halfZ - 0.02)
+          ];
+          const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+          const line = new THREE.Line(lineGeo, stringMat);
+          this.groups.plants.add(line);
+
+          // Planta de tomate indeterminada trepando
+          const plantGroup = new THREE.Group();
+          plantGroup.position.set(px, yBase + southBoxH, zPlant);
+
+          // Tallos y racimos
+          const stemGeo = new THREE.CylinderGeometry(0.015, 0.02, 1.6, 8);
+          const stem = new THREE.Mesh(stemGeo, plantMat);
+          stem.position.y = 0.8;
+          plantGroup.add(stem);
+
+          // Masas de hojas verdes en diferentes cotas
+          [0.4, 0.8, 1.2, 1.5].forEach((ly, lidx) => {
+            const leafGeo = new THREE.DodecahedronGeometry(0.12 + (lidx % 2) * 0.04, 1);
+            const leaf = new THREE.Mesh(leafGeo, plantMat);
+            leaf.position.set((Math.sin(i + lidx) * 0.08), ly, (Math.cos(i + lidx) * 0.06));
+            leaf.scale.set(1.4, 0.6, 1.2);
+            plantGroup.add(leaf);
+
+            // Racimos de tomates rojos maduros
+            if (lidx <= 2) {
+              const tom = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 12), tomatoMat);
+              tom.position.set((Math.sin(i + lidx) * 0.09) + 0.05, ly - 0.08, 0.08);
+              plantGroup.add(tom);
+
+              const tom2 = tom.clone();
+              tom2.position.x -= 0.06;
+              tom2.position.y -= 0.03;
+              plantGroup.add(tom2);
+            }
+          });
+
+          plantGroup.userData = {
+            name: `Tomate Indeterminado #${i + 1} (Entutorado 2.25m)`,
+            meta: 'Variedad Indeterminada • Guiado Vertical en Cuerda Tensada',
+            desc: 'Aprovecha la máxima altura junto al muro sur para rendimiento agronómico superior sin sombras cruzadas.'
+          };
+          this.raycastableObjects.push(stem);
+          this.groups.plants.add(plantGroup);
+        }
+
+        // 2. BANCAL SECUNDARIO NORTE / CENTRAL (Lastre ~220 kg)
+        // 2.20 m de largo × 0.45 m de ancho × 0.35 m de alto (deja libre el pasillo y el vano de acceso de 60 cm)
+        const northBoxW = 2.15;
+        const northBoxD = 0.45;
+        const northBoxH = 0.35;
+        const northBoxGeo = new THREE.BoxGeometry(northBoxW, northBoxH, northBoxD);
+        const northBox = new THREE.Mesh(northBoxGeo, planterWoodMat);
+        // Ubicado en X = -0.35 para no obstruir el vano de puerta que está en +X
+        northBox.position.set(-0.35, yBase + northBoxH / 2, -halfZ + northBoxD / 2 + 0.12);
+        northBox.castShadow = true;
+        northBox.receiveShadow = true;
+
+        const soilNorte = new THREE.Mesh(new THREE.PlaneGeometry(northBoxW - 0.04, northBoxD - 0.04), soilMat);
+        soilNorte.rotation.x = -Math.PI / 2;
+        soilNorte.position.set(0, northBoxH / 2 - 0.02, 0);
+        northBox.add(soilNorte);
+
+        // Hortalizas menores en bancal norte (albahacas, lechugas, aromáticas)
+        for (let j = 0; j < 5; j++) {
+          const plantX = -northBoxW / 2 + 0.25 + j * 0.42;
+          const bush = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), plantMat);
+          bush.position.set(plantX, northBoxH / 2 + 0.1, 0);
+          bush.scale.set(1.2, 0.8, 1.2);
+          northBox.add(bush);
+        }
+
+        northBox.userData = {
+          name: 'Bancal Secundario Norte (Lastre ~220 kg)',
+          meta: '2.15 × 0.45 × 0.35 m • Hortalizas y Aromáticas',
+          desc: 'Completa junto al bancal sur un peso muerto combinado de 400–600 kg. Mantiene el chasis firme ante ráfagas sin dañar la impermeabilización.'
+        };
+        this.raycastableObjects.push(northBox);
+        this.groups.ballast.add(northBox);
+      }
+
+      // E. Simulación Aerodinámica: Viento SW Resbalando Tangencialmente
+      setupWindSimulation() {
+        const particleCount = 140;
+        const windGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = [];
+
+        // Generar partículas en cuadrante Suroeste (X < 0, Z > 0)
+        for (let i = 0; i < particleCount; i++) {
+          const x = -3.8 + Math.random() * 2.5;
+          const y = 0.2 + Math.random() * 3.8;
+          const z = 1.2 + Math.random() * 2.2;
+          positions[i * 3] = x;
+          positions[i * 3 + 1] = y;
+          positions[i * 3 + 2] = z;
+
+          velocities.push({
+            x: 0.035 + Math.random() * 0.025,
+            y: (Math.random() - 0.5) * 0.01,
+            z: -(0.045 + Math.random() * 0.03),
+            originX: x, originY: y, originZ: z,
+            life: Math.random() * 100
+          });
+        }
+
+        windGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        // Partículas con gradiente azul celeste a cian brillante
+        const windMat = new THREE.PointsMaterial({
+          color: SPEC.colores.mallaOeste,
+          size: 0.08,
+          transparent: true,
+          opacity: 0.75,
+          blending: THREE.AdditiveBlending
+        });
+
+        this.windPoints = new THREE.Points(windGeo, windMat);
+        this.groups.wind.add(this.windPoints);
+        this.windData = { geo: windGeo, vels: velocities, count: particleCount };
+
+        // Flechas aerodinámicas vectoriales estáticas que ilustran el flujo tangencial
+        const createStreamArrow = (origin, dir, length, color = 0x38bdf8) => {
+          const arrow = new THREE.ArrowHelper(dir.normalize(), origin, length, color, 0.2, 0.12);
+          this.groups.wind.add(arrow);
+        };
+
+        // 1. Ráfaga que sobrepasa el pretil de bloques Oeste
+        createStreamArrow(new THREE.Vector3(-2.2, 1.15, 0.5), new THREE.Vector3(1, 0.2, -0.6), 1.2);
+        // 2. Ráfaga tangencial resbalando sobre el techo Sur -> Norte
+        createStreamArrow(new THREE.Vector3(-0.8, 2.35, 0.8), new THREE.Vector3(0.5, -0.15, -1.0), 1.4, 0x10b981);
+        createStreamArrow(new THREE.Vector3(0.5, 2.28, 0.6), new THREE.Vector3(0.3, -0.15, -1.0), 1.3, 0x10b981);
+        // 3. Brisa matinal suave entrando por el Este
+        createStreamArrow(new THREE.Vector3(2.4, 1.2, 0.2), new THREE.Vector3(-0.9, 0.05, -0.4), 1.1, 0x34d399);
+      }
+
+      updateWindParticles() {
+        if (!this.windActive || !this.windData) return;
+
+        const positions = this.windData.geo.attributes.position.array;
+        const vels = this.windData.vels;
+
+        for (let i = 0; i < this.windData.count; i++) {
+          let px = positions[i * 3];
+          let py = positions[i * 3 + 1];
+          let pz = positions[i * 3 + 2];
+          const v = vels[i];
+
+          // Comportamiento de desvío aerodinámico ante el Muro Sur (9m) y Techo inclinado:
+          // Si choca con el muro Sur (Z > 0.9 y X entre -1.5 y 1.5), deflacta hacia arriba o laterales
+          if (pz > 0.85 && px > -1.6 && px < 1.6 && py < 2.3) {
+            py += 0.03; // Ascenso sobre cumbrera
+            px -= 0.01;
+          }
+
+          // Resbalamiento tangencial sobre el techo inclinado (Sur -> Norte)
+          if (pz > -1.1 && pz < 1.0 && px > -1.6 && px < 1.6 && py >= 1.95 && py <= 2.5) {
+            // Sigue la pendiente descendente hacia -Z (Norte)
+            py -= 0.008;
+            pz -= 0.05;
+          } else {
+            px += v.x;
+            py += v.y;
+            pz += v.z;
+          }
+
+          v.life += 1;
+          if (pz < -3.0 || px > 3.0 || py < 0.1 || v.life > 120) {
+            px = v.originX;
+            py = v.originY;
+            pz = v.originZ;
+            v.life = 0;
+          }
+
+          positions[i * 3] = px;
+          positions[i * 3 + 1] = py;
+          positions[i * 3 + 2] = pz;
+        }
+
+        this.windData.geo.attributes.position.needsUpdate = true;
+      }
+
+      // F. Figura de Escala Humana (1.75m)
+      buildHumanScale(hx, hz) {
+        const humanGroup = new THREE.Group();
+        humanGroup.position.set(hx, 0, hz);
+
+        const silhouetteMat = new THREE.MeshStandardMaterial({
+          color: 0x0284c7, roughness: 0.4, metalness: 0.1, transparent: true, opacity: 0.85
+        });
+
+        // Torso / Piernas estilizado
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.13, 1.4, 16), silhouetteMat);
+        body.position.y = 0.8;
+        body.castShadow = true;
+        humanGroup.add(body);
+
+        // Cabeza
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), silhouetteMat);
+        head.position.y = 1.62;
+        head.castShadow = true;
+        humanGroup.add(head);
+
+        // Base redonda
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.02, 32), silhouetteMat);
+        base.position.y = 0.01;
+        humanGroup.add(base);
+
+        humanGroup.userData = {
+          name: 'Escala Humana (1.75 m)',
+          meta: 'Estatura referencial frente al vano de acceso',
+          desc: 'Permite constatar la altura del dintel (1.85 m), el paso libre frontal (2.00 m) y la generosa altura de trabajo interior (2.25 m).'
+        };
+        this.raycastableObjects.push(body);
+        this.groups.human.add(humanGroup);
+      }
+
+      // G. Cotas y Dimensiones Técnicas
+      buildDimensions(halfX, halfZ, yBase) {
+        const lineMat = new THREE.LineDashedMaterial({
+          color: SPEC.colores.cota, dashSize: 0.08, gapSize: 0.04, linewidth: 2
+        });
+
+        const makeCota = (p1, p2) => {
+          const points = [new THREE.Vector3(...p1), new THREE.Vector3(...p2)];
+          const geo = new THREE.BufferGeometry().setFromPoints(points);
+          const line = new THREE.Line(geo, lineMat);
+          line.computeLineDistances();
+          this.groups.dimensions.add(line);
+        };
+
+        // Cota Ancho Frontal Norte (3.00m)
+        makeCota([-halfX, 0.15, -halfZ - 0.35], [halfX, 0.15, -halfZ - 0.35]);
+        // Cota Fondo Lateral Este (2.00m)
+        makeCota([halfX + 0.35, 0.15, -halfZ], [halfX + 0.35, 0.15, halfZ]);
+        // Cota Altura Cumbrera Sur (2.25m)
+        makeCota([halfX + 0.35, yBase, halfZ], [halfX + 0.35, yBase + SPEC.dimensiones.altoSur, halfZ]);
+        // Cota Altura Frontal Norte (2.00m)
+        makeCota([halfX + 0.35, yBase, -halfZ], [halfX + 0.35, yBase + SPEC.dimensiones.altoNorte, -halfZ]);
+        // Cota Pretil Oeste (1.00m)
+        makeCota([-halfX - 0.35, 0, 0], [-halfX - 0.35, SPEC.dimensiones.altoPretilOeste, 0]);
+      }
+
+      /* ==========================================================================
+         4. EVENTOS, INTERACTIVIDAD Y VISTAS PREDEFINIDAS
+         ========================================================================== */
+      setupEventListeners() {
+        window.addEventListener('resize', () => {
+          const w = this.container.clientWidth;
+          const h = this.container.clientHeight;
+          this.camera.aspect = w / h;
+          this.camera.updateProjectionMatrix();
+          this.renderer.setSize(w, h);
+        });
+
+        // Raycasting Tooltips
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        this.tooltip = document.getElementById('inspector-tooltip');
+        this.ttTitle = document.getElementById('tooltip-title');
+        this.ttMeta = document.getElementById('tooltip-meta');
+        this.ttDesc = document.getElementById('tooltip-desc');
+        this.ttAgro = document.getElementById('tooltip-agro');
+
+        window.addEventListener('mousemove', (e) => {
+          const rect = this.renderer.domElement.getBoundingClientRect();
+          this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+          this.raycaster.setFromCamera(this.mouse, this.camera);
+          const intersects = this.raycaster.intersectObjects(this.raycastableObjects, false);
+
+          if (intersects.length > 0 && intersects[0].object.userData.name) {
+            const data = intersects[0].object.userData;
+            this.ttTitle.textContent = data.name;
+            this.ttMeta.textContent = data.meta || '';
+            this.ttDesc.textContent = data.desc || '';
+            if (data.agro) {
+              this.ttAgro.style.display = 'block';
+              this.ttAgro.textContent = `🌱 Agronomía: ${data.agro}`;
+            } else {
+              this.ttAgro.style.display = 'none';
+            }
+            this.tooltip.style.display = 'block';
+            this.tooltip.style.left = `${e.clientX}px`;
+            this.tooltip.style.top = `${e.clientY}px`;
+          } else {
+            this.tooltip.style.display = 'none';
+          }
+        });
+
+        // Controles de Vistas de Cámara
+        const setView = (px, py, pz, tx, ty, tz, label) => {
+          this.animateCamera(px, py, pz, tx, ty, tz);
+          document.getElementById('direction-text').textContent = `Vista: ${label}`;
+          document.querySelectorAll('.btn-toolbar').forEach(b => b.classList.remove('active'));
+        };
+
+        document.getElementById('btn-view-iso').addEventListener('click', (e) => {
+          setView(4.6, 3.8, -4.8, 0, 1.1, 0, 'Isométrica (NE - Acceso y Sol)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-iso-sw').addEventListener('click', (e) => {
+          setView(-5.2, 3.8, 5.0, 0, 1.2, 0, 'Isométrica SW (Viento & Muros)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-front').addEventListener('click', (e) => {
+          setView(0, 1.4, -5.4, 0, 1.1, -1.0, 'Fachada Frontal (Norte - Acceso/Sol)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-back').addEventListener('click', (e) => {
+          setView(0, 2.2, 5.8, 0, 1.4, 1.0, 'Fachada Posterior (Sur - Muro 9m & Tomates)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-left').addEventListener('click', (e) => {
+          setView(-5.6, 1.6, 0, -1.0, 1.1, 0, 'Lateral Oeste (Pretil Bloques 1.0m)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-right').addEventListener('click', (e) => {
+          setView(5.6, 1.6, 0, 1.0, 1.1, 0, 'Lateral Este (Malla Ventilación)');
+          e.target.classList.add('active');
+        });
+
+        document.getElementById('btn-view-top').addEventListener('click', (e) => {
+          setView(0, 7.2, 0.001, 0, 0, 0, 'Planta Cenital');
+          e.target.classList.add('active');
+        });
+
+        // Alternar Viento SW
+        const windBtn = document.getElementById('btn-toggle-wind');
+        windBtn.addEventListener('click', () => {
+          this.windActive = !this.windActive;
+          this.groups.wind.visible = this.windActive;
+          windBtn.classList.toggle('wind-active', this.windActive);
+          document.getElementById('layer-wind').checked = this.windActive;
+        });
+
+        // Alternar Rayos X
+        document.getElementById('btn-xray').addEventListener('click', (e) => {
+          this.xrayMode = !this.xrayMode;
+          e.target.classList.toggle('active', this.xrayMode);
+          const op = this.xrayMode ? 0.08 : 0.35;
+          this.meshWallMat.opacity = op;
+          this.meshOesteMat.opacity = op;
+          this.meshRoofMat.opacity = this.xrayMode ? 0.12 : 0.45;
+          this.wallSouthMat.opacity = this.xrayMode ? 0.25 : 1.0;
+          this.wallSouthMat.transparent = this.xrayMode;
+          this.wallWestMat.opacity = this.xrayMode ? 0.25 : 1.0;
+          this.wallWestMat.transparent = this.xrayMode;
+        });
+
+        // Giro 360°
+        document.getElementById('btn-auto-rotate').addEventListener('click', (e) => {
+          this.autoRotate = !this.autoRotate;
+          this.controls.autoRotate = this.autoRotate;
+          this.controls.autoRotateSpeed = 2.0;
+          e.target.classList.toggle('active', this.autoRotate);
+        });
+
+        // Reset
+        document.getElementById('btn-reset').addEventListener('click', () => {
+          setView(4.6, 3.8, -4.8, 0, 1.1, 0, 'Isométrica (NE - Acceso y Sol)');
+          document.getElementById('btn-view-iso').classList.add('active');
+        });
+
+        // Layer Toggles
+        const setupToggle = (id, groupKey) => {
+          document.getElementById(id).addEventListener('change', (e) => {
+            this.groups[groupKey].visible = e.target.checked;
+            if (groupKey === 'wind') {
+              this.windActive = e.target.checked;
+              windBtn.classList.toggle('wind-active', this.windActive);
+            }
+          });
+        };
+
+        setupToggle('layer-wall-south', 'wallSouth');
+        setupToggle('layer-wall-west', 'wallWest');
+        setupToggle('layer-wood', 'wood');
+        setupToggle('layer-mesh-walls', 'meshWalls');
+        setupToggle('layer-mesh-roof', 'meshRoof');
+        setupToggle('layer-door', 'door');
+        setupToggle('layer-ballast', 'ballast');
+        setupToggle('layer-plants', 'plants');
+        setupToggle('layer-wind', 'wind');
+        setupToggle('layer-dimensions', 'dimensions');
+        setupToggle('layer-human', 'human');
+
+        // Drawer de Cubicación
+        const modal = document.getElementById('cubicacion-modal');
+        document.getElementById('btn-open-bom').addEventListener('click', () => modal.classList.add('open'));
+        document.getElementById('btn-close-bom').addEventListener('click', () => modal.classList.remove('open'));
+      }
+
+      animateCamera(px, py, pz, tx, ty, tz) {
+        const startPos = this.camera.position.clone();
+        const endPos = new THREE.Vector3(px, py, pz);
+        const startTarget = this.controls.target.clone();
+        const endTarget = new THREE.Vector3(tx, ty, tz);
+        let progress = 0;
+
+        const anim = () => {
+          progress += 0.045;
+          if (progress < 1) {
+            const ease = 0.5 - Math.cos(progress * Math.PI) / 2;
+            this.camera.position.lerpVectors(startPos, endPos, ease);
+            this.controls.target.lerpVectors(startTarget, endTarget, ease);
+            requestAnimationFrame(anim);
+          } else {
+            this.camera.position.copy(endPos);
+            this.controls.target.copy(endTarget);
+          }
+        };
+        anim();
+      }
+
+      updateGizmo() {
+        this.gizmoCamera.position.copy(this.camera.position);
+        this.gizmoCamera.position.sub(this.controls.target);
+        this.gizmoCamera.position.setLength(3.6);
+        this.gizmoCamera.lookAt(0, 0, 0);
+        this.gizmoRenderer.render(this.gizmoScene, this.gizmoCamera);
+      }
+
+      animate() {
+        requestAnimationFrame(() => this.animate());
+        this.updateWindParticles();
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+        this.updateGizmo();
+      }
+    }
+
+    // Inicializar al cargar el DOM
+    window.addEventListener('DOMContentLoaded', () => {
+      new Structure3DEngine('webgl-canvas', 'gizmo-container');
+    });
+  </script>
+</body>
+</html>

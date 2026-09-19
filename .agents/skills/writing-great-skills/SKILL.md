@@ -71,6 +71,14 @@ Hunt for opportunities to refactor skills to use leading words. A triad spelled 
 
 You win twice over: fewer tokens, _and_ a sharper hook for the agent to hang its thinking on. Assume every skill is carrying restatements that leading words retire — go find them.
 
+## Deliverables with visual UI (Dual-Theme Pattern)
+
+When a skill scripts the generation of standalone user-facing HTML documents, guides, or dashboards (e.g. `generate-html-doc`):
+- **Avoid Barebones Defaults**: Deliverables must not land on screen as flat, plain white sheets. Screen presentation defaults to **rich dark glassmorphic aesthetics** (dark slate canvas `#070b14`, translucent cards, subtle borders, high-contrast typography, and tailored accents).
+- **Dual-Theme Toggle**: Include an accessible toggle (`☀️ Modo Claro / 🌙 Modo Noche`) persisted in `localStorage` so the user can switch between dark screen comfort and daytime reading at will.
+- **Strict Print Isolation (`@media print`)**: Physical printing or PDF export must unconditionally force a clean white background (`#ffffff`), dark typography (`#000000`), no shadows, and hidden toolbars (`.no-print`) so dark screen themes never waste ink on paper.
+- **Zero Fragility**: All CSS and JavaScript must remain 100% self-contained inline (only web fonts as external).
+
 ## Failure modes
 
 Use these to diagnose issues the user may be having with the skill.
