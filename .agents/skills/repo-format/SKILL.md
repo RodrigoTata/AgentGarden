@@ -1,7 +1,6 @@
 ---
 name: repo-format
 description: Scaffold a new project folder into a GitHub-ready repository, or tidy an existing one into standard shape.
-disable-model-invocation: true
 ---
 
 # Repo Format

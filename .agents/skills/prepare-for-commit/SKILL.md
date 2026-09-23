@@ -1,7 +1,6 @@
 ---
 name: prepare-for-commit
 description: Synthesize codebase changes into README.md and docs.md, check git status, and propose a conventional commit message.
-disable-model-invocation: true
 ---
 
 # Empacar (Pack & Document)

@@ -1,7 +1,6 @@
 ---
 name: grill-me-rg
 description: Interview the user relentlessly about a plan or design to stress-test it.
-disable-model-invocation: true
 ---
 
 # Grill Me — Black_Rg

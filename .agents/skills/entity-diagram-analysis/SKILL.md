@@ -1,6 +1,6 @@
 ---
-description: Genera diagramas Entidad-Relación en HTML separados por regiones para aislar el análisis.
-disable-model-invocation: true
+name: entity-diagram-analysis
+description: Genera diagramas Entidad-Relación en HTML interactivo separados por regiones para aislar el análisis y produce un resumen de arquitectura. Usar cuando el usuario pida diagramas de entidades, modelo ER interactivo, arquitectura de datos o mencione "entity-diagram-analysis".
 ---
 
 # Entity Diagram Analysis

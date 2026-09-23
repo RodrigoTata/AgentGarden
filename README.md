@@ -77,8 +77,7 @@ scripts/
 | **cotizador-departamentos** | Búsqueda, auditoría y cotización de departamentos residenciales con enlaces 100% verificados (HTTP 200), isócronas urbanas (10/20m pie, 5/15/30m auto, metro), amortización cuota a cuota en UF y CLP, Scorecard 0-10 y reporte HTML. |
 | **cotizador-casas** | Valuación y cotización inmobiliaria residencial — análisis de entorno e isócronas (10/20m pie, 5/15/30m auto, metro), amortización hipotecaria cuota a cuota, Scorecard 0-10 y reporte HTML. |
 | **ask-matt** | Entrevista y asesoría especializada basada en perfiles y criterios expertos. |
-
-
+| **show-me** | Visualización rápida del contexto mediante diagramas concisos, árboles de llamadas, pseudocódigo, diffs y artefactos HTML focalizados. |
 
 ## Habilidades Disponibles (Skills)
 
@@ -97,7 +96,7 @@ scripts/
 | **devsecops-review** | Verificaciones de seguridad DevSecOps y reporte en formato HTML + Markdown. |
 | **diagnosing-bugs** | Ciclo sistemático de diagnóstico para fallas complejas y degradación de rendimiento. |
 | **domain-modeling** | Definición del modelo de dominio, lenguaje ubicuo y decisiones de arquitectura (ADRs). |
-| **entity-diagram-analysis** | Análisis de diagramas de entidades y relaciones. |
+| **entity-diagram-analysis** | Generación de diagramas Entidad-Relación en HTML interactivo separados por regiones para aislar el análisis y producir un resumen de arquitectura. |
 | **excel-assist** | Auditoría, normalización, validación de datos, semáforos ejecutivos y modificación segura de libros Excel (.xlsx) con acceso compartido Win32 y living-reports. |
 | **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |

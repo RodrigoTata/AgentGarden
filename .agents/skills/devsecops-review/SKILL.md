@@ -1,7 +1,6 @@
 ---
 name: devsecops-review
 description: Unified architecture and security review of a codebase.
-disable-model-invocation: true
 ---
 
 # DevSecOps Review

@@ -1,7 +1,6 @@
 ---
 name: cyber-audit
 description: Relentless full-stack security audit of the codebase.
-disable-model-invocation: true
 ---
 
 # Cyber-Audit (Security Auditor)

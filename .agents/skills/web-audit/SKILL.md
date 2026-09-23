@@ -1,7 +1,6 @@
 ---
 name: web-audit
 description: Ejecuta una ingeniería inversa y auditoría profunda (técnica, estética, UX/UI) de una página web, interactuando de forma natural (sigilosa).
-disable-model-invocation: true
 ---
 
 Esta skill ejecuta un **Análisis Profundo** y una **Ingeniería Inversa** sobre una página web objetivo. El propósito es desentrañar su funcionamiento técnico, su lógica de negocio y su propuesta estética interactuando de manera natural, generando un reporte **Exhaustivo** con críticas y recomendaciones de alto nivel.

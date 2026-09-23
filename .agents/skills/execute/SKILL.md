@@ -1,7 +1,6 @@
 ---
 name: execute
 description: Execute a PRD or plan end-to-end autonomously. Runs to-tickets, tdd, and to-qa in sequence without human intervention.
-disable-model-invocation: true
 ---
 
 # Execute
