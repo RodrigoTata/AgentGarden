@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx jest:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(docker compose:*)"
+    ],
+    "ask": [
+      "Bash(firebase deploy:*)",
+      "Bash(gcloud:* deploy:*)",
+      "Bash(git push:*)",
+      "PowerShell(firebase deploy:*)",
+      "PowerShell(gcloud:* deploy:*)",
+      "PowerShell(git push:*)"
+    ]
+  }
+}
