@@ -1,6 +1,6 @@
 # ADR-0002 — Agitador overhead brushless con la electrónica fuera de la zona de vapores
 
-**Estado:** Propuesta (se confirma con el vendedor: versión 220 V e inclusión de soporte)
+**Estado:** Reemplazada en cuanto a escala por ADR-0005. Sigue vigente el principio: la electrónica va fuera de la zona de vapores.
 **Fecha:** 25-09-2026
 
 ## Contexto
