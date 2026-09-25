@@ -8,6 +8,7 @@
 ### Decisions
 - Solvente: etanol 96° grado alimentario/farmacéutico — ver ADR-0001.
 - Agitación: overhead brushless, con la electrónica fuera de la zona de vapores — ver ADR-0002.
+- Alcance: el MKI termina en extracto filtrado en etanol — ver ADR-0003.
 - Contención de la flor: hop spider inox (retiro en una pieza).
 - Sensado: DS18B20 1-Wire en vaina inox + ESP32.
 
@@ -25,7 +26,7 @@
 | Extintor clase B | Pendiente | — |
 
 ### Out of Scope (MKI)
-- Recuperación o evaporación del solvente (❓ pendiente de confirmar).
+- Recuperación o evaporación del solvente — ver ADR-0003 (pasa al MKII).
 - Descarboxilación.
 - Análisis de potencia (HPLC) y dosificación.
 - Control automático de temperatura (el MKI solo registra).
@@ -37,7 +38,7 @@
 ---
 
 ## Version: MKII — Operación en condiciones reales
-*Central Question:* ¿El proceso rinde de forma consistente lote a lote, con temperatura controlada (no solo registrada) y recuperación de solvente segura?
+*Central Question:* ¿Se puede recuperar el etanol de forma segura (ADR-0003) y lograr un rendimiento consistente lote a lote, con temperatura controlada y no solo registrada?
 *Estimated Cost:* por estimar
 
 ## Version: MKIII — Producción / cumplimiento
