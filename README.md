@@ -18,7 +18,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── audit-me/
     ├── bpmn-diagram/
     ├── business-implementation-plan/
-    ├── code-review/
+    ├── code-review-rg/
     ├── codebase-design/
     ├── context-compactor/
     ├── context-extractor/
@@ -87,7 +87,7 @@ scripts/
 | **audit-me** | Auditoría crítica implacable de propuestas, lógica de negocio, arquitecturas de dominio y código de software con stress-testing de invariantes y detección de fugas. |
 | **bpmn-diagram** | Generación de diagramas de procesos de negocio BPMN 2.0 en HTML interactivo con bpmn-js (Camunda ref). |
 | **business-implementation-plan** | Transformación de ideas de negocio en planes de implementación estructurados con costeo (Landed Cost), unit economics y hoja de ruta. |
-| **code-review** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
+| **code-review-rg** | Revisión de código basada en estándares del repositorio y especificaciones del PR. |
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
 | **context-extractor** | Extracción y digestión estructurada de documentos binarios (PDF, Excel, Word, PPT, CSV) a un almacén RAG local optimizado en tokens. |
