@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agile Reactor MKI — Cotización</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-page: #070b14;
+    --bg-doc: rgba(13, 20, 36, 0.94);
+    --border-doc: rgba(51, 65, 85, 0.65);
+    --doc-shadow: 0 14px 45px rgba(0, 0, 0, 0.7);
+    --text-title: #ffffff;
+    --text-subtitle: #34d399;
+    --text-body: #cbd5e1;
+    --text-muted: #94a3b8;
+    --card-bg: rgba(18, 28, 51, 0.75);
+    --card-border: rgba(51, 65, 85, 0.6);
+    --meta-bg: rgba(15, 23, 42, 0.85);
+    --meta-border: rgba(51, 65, 85, 0.6);
+    --table-th: #047857;
+    --table-border: rgba(51, 65, 85, 0.5);
+    --table-row: rgba(15, 23, 42, 0.6);
+    --table-row-alt: rgba(24, 34, 58, 0.5);
+    --table-hover: rgba(51, 65, 85, 0.4);
+    --step-bg: rgba(15, 23, 42, 0.75);
+    --step-border: rgba(51, 65, 85, 0.6);
+    --callout-bg: rgba(16, 185, 129, 0.1);
+    --callout-border: #10b981;
+    --callout-warn-bg: rgba(245, 158, 11, 0.1);
+    --callout-warn-border: #f59e0b;
+    --primary: #10b981;
+    --primary-dark: #047857;
+    --divider: rgba(51, 65, 85, 0.6);
+}
+
+body.theme-light {
+    --bg-page: #f1f5f9;
+    --bg-doc: #ffffff;
+    --border-doc: #e2e8f0;
+    --doc-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    --text-title: #0f172a;
+    --text-subtitle: #10b981;
+    --text-body: #334155;
+    --text-muted: #64748b;
+    --card-bg: #f8fafc;
+    --card-border: #e2e8f0;
+    --meta-bg: #f8fafc;
+    --meta-border: #e2e8f0;
+    --table-th: #047857;
+    --table-border: #e2e8f0;
+    --table-row: #ffffff;
+    --table-row-alt: #f8fafc;
+    --table-hover: #f1f5f9;
+    --step-bg: #f8fafc;
+    --step-border: #e2e8f0;
+    --callout-bg: #f0fdf4;
+    --callout-border: #10b981;
+    --callout-warn-bg: #fffbeb;
+    --callout-warn-border: #f59e0b;
+    --primary: #10b981;
+    --primary-dark: #047857;
+    --divider: #e2e8f0;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 1.2cm;
+}
+
+@media print {
+    body, body.theme-light {
+        background: white !important;
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .page-break { page-break-before: always; }
+    .no-print { display: none !important; }
+    .document {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+    .card, .flow-step, .doc-meta {
+        background: #fafafa !important;
+        border: 1px solid #e0e0e0 !important;
+        color: #111 !important;
+    }
+    p, li, td, .flow-step-desc { color: #222 !important; }
+    h1, h2, h3, h4, strong, .flow-step-title { color: #000 !important; }
+    th { background: #047857 !important; color: white !important; }
+    .flow-step { break-inside: avoid; }
+    .card { break-inside: avoid; }
+    tr { break-inside: avoid; }
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-body);
+    line-height: 1.6;
+    font-size: 13px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* --- Top Navigation Bar (Consistent Interconnected Suite Header) --- */
+.top-bar {
+    background: var(--bg-doc);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-doc);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.brand-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+.brand-title {
+    font-size: 15px; font-weight: 800; color: var(--text-title); letter-spacing: -0.3px;
+}
+.brand-subtitle {
+    font-size: 11.5px; color: var(--text-muted);
+}
+
+.top-actions {
+    display: flex; align-items: center; gap: 10px;
+}
+.btn-action {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-body);
+    font-size: 12px; font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 9px;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.btn-action:hover {
+    background: var(--table-hover);
+    border-color: #64748b;
+    transform: translateY(-1px);
+    color: var(--text-title);
+}
+.btn-action.primary {
+    background: var(--primary); color: #070b14;
+    border-color: var(--primary); font-weight: 700;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+.btn-action.theme-toggle {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.4);
+    font-weight: 700;
+}
+.btn-action.theme-toggle:hover {
+    background: rgba(245, 158, 11, 0.3);
+    color: #fff;
+}
+
+@media (max-width: 1024px) {
+    .top-bar { padding: 12px 16px; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .top-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+}
+
+/* --- Document Shell (A4 Layout) --- */
+.document {
+    max-width: 210mm;
+    margin: 30px auto;
+    background: var(--bg-doc);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-doc);
+    padding: 44px 40px;
+    box-shadow: var(--doc-shadow);
+    border-radius: 12px;
+    transition: all 0.25s ease;
+}
+
+/* --- Header --- */
+.doc-header {
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+}
+.doc-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.doc-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(16, 185, 129, 0.15);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.doc-header h1 {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text-title);
+    line-height: 1.25;
+    margin-bottom: 4px;
+    letter-spacing: -0.4px;
+}
+.doc-header .subtitle {
+    font-size: 13px;
+    color: var(--text-subtitle);
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+.doc-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    background: var(--meta-bg);
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--meta-border);
+}
+.doc-meta span { display: block; }
+.doc-meta strong { color: var(--text-title); }
+
+/* --- Headings --- */
+h2 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-title);
+    margin-top: 26px;
+    margin-bottom: 12px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--divider);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.2px;
+}
+h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+p { margin-bottom: 8px; color: var(--text-body); }
+ul, ol { padding-left: 18px; margin-bottom: 8px; color: var(--text-body); }
+li { margin-bottom: 3px; }
+
+/* --- Tables --- */
+.table-container {
+    overflow-x: auto;
+    margin: 14px 0;
+    border-radius: 8px;
+    border: 1px solid var(--table-border);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+th {
+    background: var(--table-th);
+    color: white;
+    padding: 8px 10px;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid var(--table-th);
+    text-align: left;
+}
+td {
+    padding: 7px 10px;
+    border: 1px solid var(--table-border);
+    text-align: left;
+    color: var(--text-body);
+    background: var(--table-row);
+}
+td:first-child { font-weight: 600; color: var(--text-title); }
+tr:nth-child(even) td { background: var(--table-row-alt); }
+tr:hover td { background: var(--table-hover); }
+
+.highlight-cell {
+    background: rgba(16, 185, 129, 0.18) !important;
+    font-weight: 700;
+    color: #34d399 !important;
+}
+
+/* --- Callout Boxes --- */
+.callout {
+    background: var(--callout-bg);
+    border-left: 4px solid var(--callout-border);
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    color: var(--text-body);
+}
+.callout.warning {
+    background: var(--callout-warn-bg);
+    border-left-color: var(--callout-warn-border);
+}
+.callout.danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-left-color: #ef4444;
+}
+.callout strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--text-title);
+    font-weight: 700;
+}
+
+/* --- Flowchart Steps --- */
+.flowchart-container {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--step-bg);
+    border: 1px solid var(--step-border);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.flow-step.warning {
+    border-left-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+}
+.flow-step-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #070b14;
+    font-weight: 800;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.flow-step.warning .flow-step-number { background: #f59e0b; color: #070b14; }
+.flow-step-body { flex: 1; }
+.flow-step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.flow-step-title {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--text-title);
+}
+.flow-step-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.flow-step-specs {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--divider);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-subtitle);
+}
+
+/* --- Grid Cards --- */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+}
+.card {
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--card-bg);
+}
+.card h4 {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+.card p { font-size: 11.5px; margin-bottom: 0; color: var(--text-muted); }
+
+/* --- Badges --- */
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+}
+.badge-green  { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+.badge-blue   { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+/* --- Footer --- */
+.doc-footer {
+    margin-top: 36px;
+    padding-top: 14px;
+    border-top: 2px solid var(--divider);
+    font-size: 10.5px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .document { padding: 24px 16px; margin: 10px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .doc-meta { grid-template-columns: 1fr; }
+    .quick-toolbar { position: static; margin-bottom: 12px; justify-content: center; }
+}
+
+.btn-action.disabled { opacity: 0.45; pointer-events: none; }
+.rec td { background: rgba(16, 185, 129, 0.12) !important; }
+a { color: var(--primary); }
+body.theme-light a { color: var(--primary-dark); }
+@media print { a { color: #000 !important; } }
+.price { font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<header class="top-bar no-print">
+  <div class="brand">
+    <div class="brand-icon">⚗️</div>
+    <div>
+      <div class="brand-title">Agile Reactor · Cotización MKI</div>
+      <div class="brand-subtitle">Reactor batch de extracción con etanol · Chile</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn-action theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()">☀️ Modo Claro</button>
+    <a href="docs/version_log.md" class="btn-action" target="_blank">🧭 Version Log</a>
+    <span class="btn-action disabled" title="Pendiente: se genera después del grilling">📖 Instructivo (pendiente)</span>
+    <span class="btn-action disabled" title="Pendiente: requiere dimensiones confirmadas">🕶️ Visor 3D (pendiente)</span>
+    <button class="btn-action" onclick="window.print()">🖨️ Imprimir PDF</button>
+  </div>
+</header>
+
+<div class="document">
+  <div class="doc-header">
+    <div class="doc-header-top">
+      <span class="doc-code">AR-MKI-COT-01</span>
+      <span class="badge badge-orange">Borrador · pre-grilling</span>
+    </div>
+    <h1>Cotización MKI — Reactor batch para extracción por solvente</h1>
+    <div class="subtitle">Maceración de flor de cannabis medicinal en etanol, con agitación y monitoreo de temperatura (ESP32)</div>
+    <div class="doc-meta">
+      <span><strong>Fecha:</strong> 25-09-2026</span>
+      <span><strong>Versión:</strong> MKI · rev. 0</span>
+      <span><strong>Mercado:</strong> Chile (CLP, IVA incluido salvo indicación)</span>
+      <span><strong>Total recomendado:</strong> ≈ $176.666 + despachos</span>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <strong>Estado de los precios</strong>
+    Los precios de los ítems 1, 2 y 4 son los que informaste tú; no pude verificarlos porque la red de esta sesión bloquea los sitios de esas tiendas. Del ítem 3 verifiqué por búsqueda web las especificaciones del motor, no el precio. Confirma precio y stock antes de comprar.
+  </div>
+
+  <h2>1. Pregunta central del MKI</h2>
+  <p><strong>¿Puede un equipo armado con componentes comerciales de cervecería y de laboratorio macerar un lote de flor en etanol con agitación controlada y temperatura registrada, y entregar un extracto filtrado de forma repetible y segura?</strong></p>
+  <div class="grid-3">
+    <div class="card"><h4>Escala</h4><p>10–12 L de etanol útiles por lote en una olla de 20 L.</p></div>
+    <div class="card"><h4>Proceso</h4><p>Material vegetal contenido en una cesta; agitación con hélice a baja velocidad; vaciado por válvula inferior.</p></div>
+    <div class="card"><h4>Telemetría</h4><p>ESP32 con DS18B20 en vaina inox; la electrónica queda fuera de la zona de vapores.</p></div>
+  </div>
+
+  <h2>2. Ítems cotizados</h2>
+
+  <h3>2.1 Estanque inox con válvula de salida</h3>
+  <p>Olla de acero inoxidable de 10–20 L útiles, con tapa y válvula inferior para vaciar.</p>
+  <div class="table-container"><table>
+    <tr><th>Opción</th><th>Precio</th><th>Detalle</th><th>Razón</th></tr>
+    <tr class="rec"><td><a href="https://www.elcervecero.cl/products/olla-20-litros-acero-inoxidable-2-0-mm">A · El Cervecero — Olla 20 L inox 2 mm</a> <span class="badge badge-green">Recomendada</span></td><td class="price">$49.900<br><small>(habitual $55.900)</small></td><td>Tapa, válvula 1/2" y espiga inox 1/2". 10–12 L efectivos.</td><td>Mejor relación precio/equipamiento; lista para usar.</td></tr>
+    <tr><td><a href="https://www.thebeerlab.cl/olla-acero-inox-30-lts">B · The Beer Lab — Olla 20 L efectivos</a></td><td class="price">$65.900</td><td>33 L totales, 35 × 35 cm, llave de bola inox 1/2", termómetro bimetálico opcional.</td><td>Premium: más capacidad y lectura de respaldo.</td></tr>
+    <tr><td><a href="https://www.fogonescocinillasalvaro.cl/1_20_ollas-acero-inox.html">C · La Casa del Fogón — Fondo inox 10 L</a></td><td class="price">$15.000</td><td>Sin válvula, grado del acero no especificado.</td><td>La más barata; exige perforar e instalar pasamuros.</td></tr>
+  </table></div>
+  <p><strong>Recomendación: A.</strong> Trae válvula y espiga, y su capacidad calza con el MKI. La C, sumando válvula, pasamuros y mano de obra, cuesta casi lo mismo y arriesga filtraciones. La rosca es de 1/2" (no tri-clamp); sella con cinta PTFE.</p>
+
+  <h3>2.2 Cesta de malla inox (hop spider)</h3>
+  <p>Canasto cilíndrico que se cuelga del borde y contiene la flor, para retirarla de una vez sin que toque la hélice.</p>
+  <div class="table-container"><table>
+    <tr><th>Opción</th><th>Precio</th><th>Detalle</th><th>Razón</th></tr>
+    <tr class="rec"><td><a href="https://www.latiendadelcervecero.cl/hop-spider-conic-basket">A · La Tienda del Cervecero — 15 × 35 cm</a> <span class="badge badge-green">Recomendada</span></td><td class="price">$18.900</td><td>Ø15 × 35 cm. También hay 10 × 25 cm al mismo precio.</td><td>Local, especializada, tamaño adecuado.</td></tr>
+    <tr><td><a href="https://enterinsumos.cl/producto/hop-spider-de-inox-32cm/">B · Enter Insumos — 32 cm</a></td><td class="price">$22.000<br><small>(antes $24.500)</small></td><td>32 cm, hasta 3 kg.</td><td>Alternativa local de mayor capacidad.</td></tr>
+    <tr><td><a href="https://www.amazon.com/-/es/YaeBrew-Hop-Spider-inoxidable-micrones/dp/B07KVXPTXX">C · Amazon — YaeBrew</a></td><td class="price">US$17,99 + envío</td><td>Malla 300 µm, 4 × 10".</td><td>Internacional, malla de medida conocida.</td></tr>
+  </table></div>
+  <p><strong>Recomendación: A</strong>, sujeta a la verificación de calce de la sección 3.</p>
+
+  <h3>2.3 Agitador de hélice (overhead stirrer)</h3>
+  <p>Agitador de varilla con eje y hélice inox, velocidad regulable y capacidad ~20 L. Por los vapores de etanol, idealmente brushless o neumático.</p>
+  <div class="table-container"><table>
+    <tr><th>Opción</th><th>Precio</th><th>Detalle</th><th>Razón</th></tr>
+    <tr class="rec"><td><a href="https://cl.ebay.com/b/Overhead-Stirrers/185212/bn_115383566">A · eBay — Fristaden Lab OSC-20L</a> <span class="badge badge-green">Recomendada</span></td><td class="price">$103.886<br><small>(usado desde $92.565)</small></td><td>210 W, digital, 20 L. <strong>Motor DC brushless</strong> según fichas del fabricante (<a href="https://www.ebay.com/p/19051799005">eBay</a>). Importado: puede aplicar IVA de importación.</td><td>El más barato; formato de laboratorio.</td></tr>
+    <tr><td><a href="https://www.magri.cl/0-agitador-helice-pedetal-20l-r390-100l-r690-neumatico-laboratorio-pintura-mezclador">B · Magri — Pedestal eléctrico 20 L</a></td><td class="price">$490.000</td><td>220 V, 200 W, 0–600 rpm, hélice 12 cm, pedestal 46–86 cm. A pedido.</td><td>Local, rango de rpm bajo.</td></tr>
+    <tr><td><a href="https://agrimaquinas.com/products/agitador-helice-pedetal-100l-r690-neumatico-laboratorio-pi">C · Agrimáquinas — Neumático de pedestal</a></td><td class="price">$490.000<br><small>+ compresor</small></td><td>Aire comprimido, eje inox, consumo 180 L/min.</td><td>La opción intrínsecamente más segura con vapores.</td></tr>
+  </table></div>
+  <p><strong>Recomendación: A.</strong> Cuesta una quinta parte y el motor es brushless. Brushless no significa certificado para atmósferas explosivas (ATEX): la placa de control y el interruptor siguen pudiendo generar chispa. Ver sección 5.</p>
+  <div class="callout warning">
+    <strong>Voltaje: confirmar antes de comprar</strong>
+    Los Fristaden que se venden en EE. UU. vienen con enchufe de EE. UU. (110–120 V). En Chile la red es de 220 V / 50 Hz. Pide al vendedor la versión de 220 V o suma un transformador reductor de ≥300 W, que también debe quedar fuera de la zona de vapores. Pregunta además si incluye soporte (pedestal y pinza) y cuál es el diámetro de la hélice.
+  </div>
+
+  <h3>2.4 Sensor de temperatura DS18B20 con vaina inox</h3>
+  <p>Sonda digital 1-Wire, vaina inox y ~1 m de cable, para el ESP32.</p>
+  <div class="table-container"><table>
+    <tr><th>Opción</th><th>Precio</th><th>Detalle</th><th>Razón</th></tr>
+    <tr class="rec"><td><a href="https://hubot.cl/producto/sonda-temperatura-ds18b20-sku-551/">A · Hubot — Sonda DS18B20</a> <span class="badge badge-green">Recomendada ×2</span></td><td class="price">$1.990 c/u</td><td>Tubo inox Ø6 × 30 mm, cable 91 cm. En stock.</td><td>La más barata.</td></tr>
+    <tr><td><a href="https://mcielectronics.cl/shop/product/sensor-de-temperatura-ds18b20-resistente-al-agua-1m-25764/">B · MCI Electronics — 1 m</a></td><td class="price">$2.690</td><td>Online y en tienda; despacho a regiones publicado.</td><td>Tienda grande y confiable.</td></tr>
+    <tr><td><a href="https://altronics.cl/sensor-sonda-temperatura-ds18b20">C · Altronics — Sonda DS18B20</a></td><td class="price">$3.706<br><small>($3.114 neto)</small></td><td>233 unidades en stock.</td><td>Orientada a factura de empresa.</td></tr>
+  </table></div>
+  <p><strong>Recomendación: A, dos unidades</strong> (una de repuesto). Elige la tienda según el costo de despacho, porque la diferencia de precio es mínima.</p>
+
+  <div class="page-break"></div>
+  <h2>3. Verificaciones de calce antes de comprar</h2>
+  <p>Estas tres piezas comparten el mismo espacio dentro de la olla. Si no calzan, el MKI no funciona aunque cada una esté bien por separado.</p>
+  <div class="flowchart-container">
+    <div class="flow-step warning"><div class="flow-step-number">1</div><div class="flow-step-body"><div class="flow-step-title">Altura de la cesta frente a la olla</div><div class="flow-step-desc">Una olla de 20 L suele medir unos 30 × 30 cm. Una cesta de 35 cm de alto no cabe o queda apoyada en el fondo. Pide las medidas interiores de la olla; si no alcanza, usa la cesta de 10 × 25 cm (mismo precio) o la olla B (35 × 35 cm).</div></div></div>
+    <div class="flow-step warning"><div class="flow-step-number">2</div><div class="flow-step-body"><div class="flow-step-title">Espacio para la hélice</div><div class="flow-step-desc">La cesta cuelga a un costado del borde. Con Ø15 cm en una olla de ~Ø30 cm, a la hélice le quedan unos 15 cm. Una hélice de 12 cm deja apenas 1,5 cm por lado. Confirma el diámetro de la hélice del agitador o pon la hélice por debajo de la cesta.</div></div></div>
+    <div class="flow-step warning"><div class="flow-step-number">3</div><div class="flow-step-body"><div class="flow-step-title">Posición del sensor</div><div class="flow-step-desc">La vaina del DS18B20 debe quedar sumergida en el etanol, lejos de la hélice y de las paredes. El cable y el sello son de PVC: fuera del líquido y, de ser posible, fuera del vapor.</div></div></div>
+  </div>
+
+  <h2>4. Observaciones de proceso (extracción de cannabis con etanol)</h2>
+  <div class="grid-2">
+    <div class="card"><h4>Agitación suave</h4><p>A muchas rpm se tritura la flor y se extraen más clorofila y ceras. En el MKI conviene trabajar en el extremo bajo del rango (≈100–300 rpm) y registrar la velocidad usada en cada lote.</p></div>
+    <div class="card"><h4>La malla de 300 µm no filtra</h4><p>La cesta retiene la flor, pero deja pasar las partículas finas. Hace falta un filtrado posterior (bolsa de ~25 µm o papel filtro). Es un ítem pendiente.</p></div>
+    <div class="card"><h4>Temperatura de trabajo</h4><p>El etanol frío (bajo −20 °C) arrastra menos clorofila y ceras; a temperatura ambiente la extracción es más rápida pero sale más sucia. Esta decisión define si el MKI necesita enfriamiento. Queda abierta para el grilling.</p></div>
+    <div class="card"><h4>Grado del solvente</h4><p>Etanol grado alimentario o farmacéutico de 96°, nunca alcohol desnaturalizado (contiene metanol y aditivos). Queda como ítem pendiente de cotizar.</p></div>
+  </div>
+
+  <h2>5. Seguridad con etanol</h2>
+  <div class="callout danger">
+    <strong>El etanol se inflama a temperatura ambiente</strong>
+    El etanol de 96° tiene su punto de inflamación en torno a 13–17 °C: sobre esa temperatura, el vapor se puede encender con una chispa. Una olla abierta con 10 L de etanol y un motor encima es el principal riesgo del MKI.
+  </div>
+  <ul>
+    <li>Trabaja en un lugar con ventilación cruzada o al aire libre, sin llama, estufa ni calefactor cerca.</li>
+    <li>Pon el controlador del agitador, la fuente, el ESP32 y los enchufes a más de 1,5 m, por encima del borde de la olla y en dirección contraria al flujo de aire. El vapor de etanol es más pesado que el aire y se acumula abajo.</li>
+    <li>Mantén la tapa puesta durante la maceración. Pasa el eje y el sensor por perforaciones ajustadas.</li>
+    <li>Ten a mano un extintor de CO₂ o de polvo químico (clase B). El agua no sirve.</li>
+    <li>Evaporar el etanol para concentrar el extracto es la etapa de mayor riesgo. Por ahora queda fuera de esta cotización y es una decisión abierta.</li>
+  </ul>
+
+  <h2>6. Ítems pendientes de cotizar</h2>
+  <p>El BOM del MKI no está completo con los cuatro ítems anteriores. Estos se cotizan después del grilling, porque dependen de las decisiones abiertas:</p>
+  <div class="table-container"><table>
+    <tr><th>Ítem</th><th>Depende de</th><th>Estado</th></tr>
+    <tr><td>ESP32 DevKit + resistencia 4,7 kΩ + fuente 5 V + caja</td><td>Telemetría: solo local o con registro en la nube</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Etanol 96° grado alimentario/farmacéutico (~12 L)</td><td>Volumen por lote y proveedor</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Filtrado fino (bolsa ~25 µm, embudo, papel filtro)</td><td>Pureza objetivo</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Enfriamiento (freezer, baño de hielo, chiller)</td><td>Extracción en frío o a temperatura ambiente</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Recuperación de solvente (destilador / rotavapor)</td><td>Si entra o no en el MKI</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Transformador 220→110 V (si aplica), cinta PTFE, manguera de silicona grado alimentario</td><td>Versión del agitador</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+    <tr><td>Extintor clase B (CO₂ o PQS)</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+  </table></div>
+
+  <h2>7. Resumen de inversión</h2>
+  <div class="table-container"><table>
+    <tr><th>Ítem</th><th>Opción</th><th>Subtotal</th></tr>
+    <tr><td>Estanque inox 20 L</td><td>A · El Cervecero</td><td class="price">$49.900</td></tr>
+    <tr><td>Hop spider</td><td>A · La Tienda del Cervecero</td><td class="price">$18.900</td></tr>
+    <tr><td>Agitador overhead</td><td>A · Fristaden OSC-20L</td><td class="price">$103.886</td></tr>
+    <tr><td>Sensor DS18B20 ×2</td><td>A · Hubot</td><td class="price">$3.980</td></tr>
+    <tr><td><strong>Total cotizado</strong></td><td>Sin despachos ni IVA de importación</td><td class="price highlight-cell">$176.666</td></tr>
+  </table></div>
+  <div class="callout">
+    <strong>Escenario alternativo</strong>
+    Si el agitador tiene que ser neumático (opción C), el total supera los $560.000 sin contar el compresor. Los ítems pendientes de la sección 6 se suman a cualquiera de los dos escenarios.
+  </div>
+
+  <div class="doc-footer">
+    <span>Agile Reactor · Cotización MKI · AR-MKI-COT-01</span>
+    <span>rev. 0 · 25-09-2026</span>
+  </div>
+</div>
+
+<script>
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('theme-light');
+    const btn = document.getElementById('btn-theme-toggle');
+    if (btn) btn.innerHTML = isLight ? '🌙 Modo Noche' : '☀️ Modo Claro';
+    try { localStorage.setItem('doc-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    let saved = null;
+    try { saved = localStorage.getItem('doc-theme'); } catch (e) {}
+    if (saved === 'light') {
+      document.body.classList.add('theme-light');
+      const btn = document.getElementById('btn-theme-toggle');
+      if (btn) btn.innerHTML = '🌙 Modo Noche';
+    }
+  });
+</script>
+</body>
+</html>
