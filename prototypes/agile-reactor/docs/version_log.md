@@ -9,6 +9,7 @@
 - Solvente: etanol 96° grado alimentario/farmacéutico — ver ADR-0001.
 - Agitación: overhead brushless, con la electrónica fuera de la zona de vapores — ver ADR-0002.
 - Alcance: el MKI termina en extracto filtrado en etanol — ver ADR-0003.
+- Temperatura: extracción en frío; insumos preenfriados a −18 °C en freezer, reactor aislado fuera del freezer — ver ADR-0004.
 - Contención de la flor: hop spider inox (retiro en una pieza).
 - Sensado: DS18B20 1-Wire en vaina inox + ESP32.
 
@@ -22,7 +23,8 @@
 | ESP32 + fuente + caja | Pendiente | — |
 | Etanol 96° (~12 L) | Pendiente | — |
 | Filtrado fino | Pendiente | — |
-| Enfriamiento | Pendiente (depende de la decisión de temperatura) | — |
+| Enfriamiento | Freezer doméstico existente (ADR-0004) | $0 |
+| Chaqueta aislante para la olla | Pendiente | ≈$10.000–25.000 |
 | Extintor clase B | Pendiente | — |
 
 ### Out of Scope (MKI)
