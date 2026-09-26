@@ -7,6 +7,47 @@ A skill exists to wrangle determinism out of a stochastic system. **Predictabili
 
 **Bold terms** are defined in [`GLOSSARY.md`](GLOSSARY.md); look them up there for the full meaning.
 
+## Repository Target & Organization
+
+When creating or modifying a skill:
+- **Default Location**: Always create and save new skills in the central auxiliary repository:
+  `C:\dev\AgentGarden\.agents\skills\<skill-name>\`
+- **Project-Specific Exception**: Only save a skill inside another project's local directory (`<project-root>/.agents/skills/<skill-name>/`) if the user explicitly requests a project-specific skill.
+- **Agnostic & Zero Co-Authorship**: Skills in AgentGarden are general-purpose tools. Never embed or attach co-authorship to Claude, Anthropic, Gemini, Google, OpenAI, or any AI platform in skill bodies, scripts, commits, or documentation.
+
+## Dual-Agent Compatibility (Antigravity + Claude Code)
+
+Every skill in AgentGarden **MUST be 100% compatible with and immediately discoverable via `/` by both Google Antigravity and Claude Code**:
+
+1. **Standard Directory Structure**:
+   ```
+   .agents/skills/<skill-name>/
+   ├── SKILL.md       # Required: Entry point with YAML frontmatter
+   ├── scripts/       # Optional: Deterministic helper scripts (Python/Node)
+   └── references/    # Optional: Deep domain documentation and schemas
+   ```
+
+2. **Cross-Platform YAML Frontmatter**:
+   The header of `SKILL.md` must strictly follow the open Agent Skills standard (`agentskills.io`):
+   ```yaml
+   ---
+   name: <skill-name>
+   description: <Third-person active description. Use when the user asks to...>
+   ---
+   ```
+   - **`name`**: Must exactly match the folder name (`^[a-z0-9]+(-[a-z0-9]+)*$`, lowercase, single hyphens, no spaces, max 64 chars). Never include reserved vendor words (`claude`, `anthropic`, `gemini`).
+   - **`description`**: Written in third person ("Analyzes...", "Evaluates...", never "I can..." or "You can..."). Must include actionable triggers ("Use when the user shares... or asks to..."). Max 1024 characters. Do NOT use XML brackets (`<`, `>`).
+   - **Encoding**: UTF-8 without BOM. Standard line endings.
+
+3. **Dual Slash-Command Discovery (`/`)**:
+   - **Antigravity**: Discovers all skills directly from `.agents/skills/<skill-name>/SKILL.md` in the active workspace.
+   - **Claude Code**: Discovers skills from `~/.claude/skills/<skill-name>/` and project `.claude/skills/<skill-name>/`.
+   - **Immediate Linking Rule**: Upon creating any new skill in `C:\dev\AgentGarden\.agents\skills\<skill-name>`, immediately create the Windows junction / symlink so Claude Code detects it live with `/`:
+     ```cmd
+     cmd /c mklink /J "%USERPROFILE%\.claude\skills\<skill-name>" "C:\dev\AgentGarden\.agents\skills\<skill-name>"
+     ```
+     *(In AgentGarden root, `.claude/skills` is also maintained as a directory junction pointing to `.agents/skills` for instant local project discovery).*
+
 ## Invocation
 
 Two choices, trading different costs:

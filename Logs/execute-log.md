@@ -272,3 +272,55 @@ pm run build). Backend mantiene 111/111 tests en verde.
 - **Tokens Spent:** ~35.000 tokens en ventana de contexto
 - **Status:** GREEN (7/7 test suites pasadas, 49/49 unit tests OK en backend, build NestJS con Webpack OK en 17.6s, build Frontend Vite OK en 6.28s con 0 errores TypeScript, qa_agent_report.md y qa_human_plan.md generados).
 
+
+## Execution Log - 2026-09-25 01:35
+- **Project Reference:** Posca (security/critical-fixes, commits 125a004 · e6d4f1e · b0ff09b) — hallazgos críticos 1, 2 y 4 de docs/devsecops-review.md
+- **Task Description:** Guardias de regresión para los hallazgos críticos: escáner de credenciales en archivos publicables (hallazgo 1, API key de OpenRouter filtrada), frontera Owner-only para toda forma de update de Telegram (hallazgo 2), y layout de paquete que impide sombrear la stdlib (hallazgo 4). 3 tickets en .scratch/critical-fixes/issues; plan QA humano omitido a pedido del usuario, reemplazado por E2E ejecutado por el agente.
+- **Complexity:** Media (los fixes ya existían del refactor MKII; el trabajo fue TDD con verificación por mutación — 6 mutantes, todos detectados —, E2E contra uvicorn real + emulador Firestore (12/12), verificación de la imagen Docker (non-root, sin secretos, calendar → stdlib) y commits lógicos en rama sin push).
+- **Execution Time:** ~25 minutos
+- **Tokens Spent:** ~50.000 tokens en ventana de contexto
+- **Status:** GREEN (114/114 tests incl. 11 contra emulador Firestore, pip-audit 0 vulnerabilidades, secret scan OK, qa_agent_report.md generado; pendiente humano: revocar la key en OpenRouter y actualizar .env).
+
+
+## Execution Log - 2026-09-26 12:35
+- **Project Reference:** TataDeliBackEnd / MeedTrack (MT-037)
+- **Task Description:** Desvinculacion y Eliminacion Segura de Recetas de Fertilizacion (Quick-fix para error 500 al eliminar recetas en /nutrition)
+- **Complexity:** Media (Migracion de clave foranea en PostgreSQL Cloud SQL a ON DELETE SET NULL, actualizacion de relacion en entidad EventoCultivo, defensa en profundidad en NutricionService.remove desvinculando eventos previo a la eliminacion fisica, suite TDD unitaria con mocks de repositorios y manager, verificacion de preservacion de uso_inventario).
+- **Execution Time:** ~10 minutos
+- **Tokens Spent:** ~125.000 tokens en ventana de contexto
+- **Status:** GREEN (3/3 tests unitarios aprobados, NestJS build Webpack OK en 18.4s, migracion DDL aplicada en PostgreSQL Cloud SQL, artifacts qa_agent_report.md y qa_human_plan.md generados).
+
+## Execution Log - 2026-09-26 15:05
+- **Project Reference:** TataDeliBackEnd / MeedTrack (MT-038)
+- **Task Description:** Modelo de Consumo El�ctrico Guiado por Eventos y Bit�cora Real (Acotaci�n por fecha de cosecha, regex de dimmer desde notas y paro de indoor por traslado a invernadero al sol).
+- **Complexity:** Media (Modificaci�n en EnergiaService.calculateWeeklyConsumption para acotar horizonte temporal a fecha de cosecha, parser regex de dimmer en notas de eventos agron�micos, soporte para indoorDetenido / outdoor a 0 kWh, suite TDD unitaria de 14 tests, y sincronizaci�n transaccional en PostgreSQL producci�n de 135 eventos en plantas del lote UC-2_LOT-2).
+- **Execution Time:** ~12 minutos
+- **Tokens Spent:** ~70.000 tokens en ventana de contexto
+- **Status:** GREEN (14/14 tests unitarios aprobados, NestJS build Webpack OK en 19.4s, sincronizaci�n en Cloud SQL producci�n OK, total semanas reducido de 26 a 16 semanas reales, consumo corregido de 585 kWh a 265 kWh y .753 CLP, artifacts qa_agent_report.md y qa_human_plan.md generados).
+
+## Execution Log - 2026-09-26 15:35
+- **Project Reference:** TataDeliBackEnd / MeedTrack (MT-036)
+- **Task Description:** Edición y Eliminación Completa del Último Evento en Lotes y Plantas Individuales (Undo & Edit transaccional con reversión fenológica y restitución de stock a inventario general).
+- **Complexity:** Media-Alta (Implementación fullstack: endpoints NestJS transaccionales en EventoCultivoController y EventoCultivoService con TypeORM manager, reversión atómica de estado de crecimiento en plantas al estado inmediatamente previo, restitución de fertilizantes en InventarioGeneral, suite TDD unitaria de 13 tests con mocks de DataSource/Manager, e integración frontend en Angular 18/Vite en LoteDetailComponent y PlantaDetailComponent con modales de confirmación/edición y toasts reactivos).
+- **Execution Time:** ~15 minutos
+- **Tokens Spent:** ~90.000 tokens en ventana de contexto
+- **Status:** GREEN (13/13 tests unitarios aprobados en EventoCultivoService, 14/14 tests aprobados en EnergiaService, builds de producción limpios tanto en Backend NestJS como en Frontend MeedTrack Vite, artifacts qa_agent_report.md y qa_human_plan.md generados).
+
+## Execution Log - 2026-09-26 16:30
+- **Project Reference:** Meedtrack_Analytics (MKI — tickets 01-19 del devsecops-review, `.scratch/mki-devsecops/issues/`)
+- **Task Description:** Reconstrucción del backend de Analytics sobre los hallazgos del devsecops-review. Incluye:
+  - Dependencias sanas y arranque único.
+  - Migraciones SQL y aislamiento por Cuenta con Row-Level Security.
+  - Identidad OIDC propia; Espacios, Catálogo, Lotes y gemelo digital honesto.
+  - Dispositivos con credencial, ingesta HTTP/MQTT con Mosquitto dynsec y órdenes certificadas.
+  - Alertas, visión con límites, derechos de datos (Ley 21.719) y Conexión Main con Reflejo (Main simulado).
+  - Federación de inicio de sesión con Main y regla automática de dueños de datos.
+  - Documentación verdadera, sesión por cookie HttpOnly con CSRF y diseño del frontend corregido.
+- **Complexity:** Alta (19 tickets verticales, 9 migraciones, 11 módulos de dominio, integración real con TimescaleDB y Mosquitto, refactor de límites de módulos guiado por prueba de arquitectura).
+- **Execution Time:** ~10 horas en varias sesiones (con pausas por cupo y compactación de contexto)
+- **Tokens Spent:** ~2.500.000 tokens de entrada acumulados en ventana de contexto y ~250.000 de salida (estimado)
+- **Status:** GREEN
+  - Pruebas: 21/21 unitarias y 103/103 E2E.
+  - Lint, build y `npm audit --omit=dev` limpios (0 vulnerabilidades).
+  - Prueba manual en Docker localhost: migraciones, seed demo y simulador HTTP/MQTT.
+  - Tickets en testing-qa; artifacts `qa_agent_report.md` y `qa_human_plan.md` generados.

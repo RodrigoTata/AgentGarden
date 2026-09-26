@@ -3,7 +3,7 @@
 - **Estado:** Aceptado
 - **Fecha:** 2026-09-19
 - **Contexto del Proyecto:** Anclaje y Estabilidad Estructural en Azotea
-- **Autor:** Equipo de Diseño Agro-Estructural Antigravity
+- **Autor:** Equipo de Ingeniería Agro-Estructural TataDeli Labs
 
 ---
 

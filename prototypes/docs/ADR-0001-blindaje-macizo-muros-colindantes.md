@@ -3,7 +3,7 @@
 - **Estado:** Aceptado
 - **Fecha:** 2026-09-19
 - **Contexto del Proyecto:** Sombreadero & Chasis Lastrado 3.0 × 2.0 m en Azotea (Clima Costero / Vientos SW)
-- **Autor:** Equipo de Diseño Agro-Estructural Antigravity
+- **Autor:** Equipo de Ingeniería Agro-Estructural TataDeli Labs
 
 ---
 

@@ -1,6 +1,6 @@
 # AgentGarden
 
-Colección de habilidades (skills) y recursos estandarizados para extender las capacidades de los agentes de IA en Antigravity.
+Colección modular de habilidades (*skills*) y recursos estandarizados de uso general para agentes de IA, compatible con el estándar abierto `.agents/skills/` (`agentskills.io`) en Google Antigravity, Claude Code, Cursor y cualquier entorno de asistencia agéntica.
 
 ## Características Clave
 
@@ -30,6 +30,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── entity-diagram-analysis/
     ├── excel-assist/
     ├── execute/
+    ├── finantial-analysis/
     ├── frontend-analysis/
     ├── generate-html-doc/
     ├── grill-me-rg/
@@ -38,6 +39,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── implementation-plan/
     ├── improve-codebase-architecture/
     ├── interactive-3d-structure/
+    ├── powerautomate-dev/
     ├── prepare-for-commit/
     ├── quotation-for/
     ├── repo-format/
@@ -46,6 +48,7 @@ Colección de habilidades (skills) y recursos estandarizados para extender las c
     ├── rule-creating/
     ├── start-a-project/
     ├── start-a-proyect/
+    ├── study-and-be-a-master-of/
     ├── tdd/
     ├── teach/
     ├── to-qa/
@@ -65,9 +68,11 @@ skills-to-review/
 ├── cotizador-departamentos/
 └── teach/
 docs/
+├── architecture.md                               # Guía técnica de arquitectura
 └── guia-metodologia-kanban-planner-agentes.md    # Marco ágil de trabajo y gobernanza
 scripts/
 └── planner_client.js                             # Cliente CLI para Microsoft Graph / Planner
+LICENSE                                           # Licencia Apache 2.0
 ```
 
 ## Habilidades en Revisión (Skills to Review)
@@ -99,6 +104,7 @@ scripts/
 | **entity-diagram-analysis** | Generación de diagramas Entidad-Relación en HTML interactivo separados por regiones para aislar el análisis y producir un resumen de arquitectura. |
 | **excel-assist** | Auditoría, normalización, validación de datos, semáforos ejecutivos y modificación segura de libros Excel (.xlsx) con acceso compartido Win32 y living-reports. |
 | **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
+| **finantial-analysis** | Comparación financiera de ideas, proyectos o prototipos para decidir cuál implementar: motor determinista (VAN, TIR, payback, exposición de caja, Monte Carlo con camino de fallo, tornado y valores de quiebre) contra la opción cero, con veredicto y criterio de muerte. |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
 | **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes) con motor Dual-Theme (Modo Noche/Claro) y cabecera interconectada. |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
@@ -107,6 +113,7 @@ scripts/
 | **implementation-plan** | Diseño de planes de implementación des-riesgados con costuras arquitectónicas, diseño de verificación y gate de aprobación de usuario. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
 | **interactive-3d-structure** | Generación de gemelos digitales y estructuras 3D interactivas en Three.js con costura declarativa, cotas, brújula cardinal y escala humana. |
+| **powerautomate-dev** | Lectura, evaluación, simplificación y depuración de flujos de Power Automate desde su link (Azure CLI): mapa en orden runAfter, lint de 10 reglas con fuente oficial, historial de ejecuciones y detalle por acción, cuadratura origen/destino. |
 | **prepare-for-commit** | Sintetiza deltas en la documentación y prepara la propuesta de commit convencional. |
 | **quotation-for** | Búsqueda y comparación de cotizaciones de productos/servicios en el mercado (por defecto Chile) con dashboard interactivo y plan de corte. |
 | **repo-format** | Formatea o estructura repositorios según estándares de ingeniería de software (scaffold/tidy). |
@@ -115,6 +122,7 @@ scripts/
 | **rule-creating** | Creación, modificación y auditoría de reglas operacionales y guardrails permanentes para agentes en cualquier espacio de trabajo. |
 | **start-a-project** | Alias de conveniencia para `start-a-proyect`. |
 | **start-a-proyect** | Orquestador maestro para proyectos físicos (sombraderos, carpintería), IoT/3D print y digitales articulando la Tríada (3D, Cotización y Manual). |
+| **study-and-be-a-master-of** | Fábrica de skills maestras para una herramienta u oficio (Excel, Power BI, 3D, madera, procesos…): encuadre, prueba de contacto sobre un espécimen real, investigación de fuentes primarias, script de solo lectura, redacción con `writing-great-skills`, prueba en carne propia e instalación agnóstica (Antigravity / Claude Code). |
 | **tdd** | Desarrollo guiado por pruebas (red-green-refactor) y estrategias de mocking/testing. |
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
@@ -126,4 +134,12 @@ scripts/
 
 ---
 
-Developed by Tata Deli Labs.
+## Licencia y Uso General
+
+- **Licencia**: Este repositorio se distribuye bajo la licencia **[Apache 2.0](LICENSE)**.
+- **Uso General y Cero Coautoría**: Todas las habilidades son de uso general y actúan como herramientas auxiliares. No imponen condiciones de coautoría ni atribución obligatoria sobre los entregables, códigos o diseños generados por los usuarios.
+- **Contribuciones de Terceros**: Contiene y adapta habilidades públicas y recursos de código abierto dejados a libre disposición por la comunidad (incluyendo estándares abiertos de `agentskills.io` y librerías comunitarias), respetando sus términos permisivos de uso libre.
+
+---
+
+Developed by Tata Deli Labs & Contributors.

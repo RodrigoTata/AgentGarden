@@ -1,10 +1,14 @@
-# Guía de Arquitectura
+# Guía de Arquitectura de AgentGarden
 
 ## Arquitectura General
 
-AgentGarden es un repositorio de habilidades (*skills*) modulares diseñado para agentes de IA. La estructura del repositorio sigue el estándar de la plataforma Antigravity, organizando cada habilidad en un directorio independiente dentro de `.agents/skills/`.
+AgentGarden es un repositorio auxiliar de habilidades (*skills*) modulares y recursos estandarizados para agentes de IA. La estructura del repositorio sigue el estándar abierto de Agent Skills (`agentskills.io`), organizando cada habilidad en un directorio independiente dentro de `.agents/skills/`.
+
+Es compatible de forma universal y agnóstica con múltiples entornos de agentes de codificación (Google Antigravity, Claude Code, Cursor, Codex, entre otros). Todas las habilidades son de uso general y no imponen autoría ni dependencias propietarias a las creaciones o artefactos que generen los usuarios.
 
 Cada directorio de habilidad contiene de forma obligatoria un archivo principal `SKILL.md` que combina metadatos YAML frontmatter con instrucciones paso a paso en formato Markdown.
+
+---
 
 ## Patrones de Diseño
 
@@ -27,14 +31,15 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 
 ### 5. Motor de Asesoría Secuencial e Interrogación Interactiva (Grill-Me Integrado)
 - Implementado en habilidades de formulación estratégica (`business-implementation-plan`, `grill-with-docs`).
-- **Protocolo de Interacción**: Formula una sola pregunta a la vez estructurada con dos alternativas explícitas (Opción recomendada con justificación técnica/financiera vs. Opción alternativa con sus implicancias y trade-offs), consolidando hitos acordados antes de avanzar de fase.
+- **Protocolo de Interacción**: Formula una sola pregunta a la vez estructurada directamente en el chat en texto plano (sin modales cerrados), consolidando hitos acordados antes de avanzar de fase.
 
 ### 6. Modelado Financiero y Cascada de Costos (Landed Cost & Unit Economics)
 - Estandarización de cálculos para costeo de importación, distribución y retail:
   - Cascada de costeo internacional: Valor FOB $\rightarrow$ Valor CIF $\rightarrow$ Derechos Aduaneros Ad-Valorem ($6\%$) $\rightarrow$ Landed Cost Unitario.
+
 ### 7. Manipulación Segura de Binarios y Control de Bloqueos (Win32 Shared Access & Safe-Write)
 - Implementado en `excel-assist` (`scripts/safe_excel.py`).
-- **Problema que resuelve**: Los agentes de IA suelen fallar con errores de permisos (`Errno 13` / `Error 32: The process cannot access the file because it is being used by another process`) cuando el usuario mantiene abierto un archivo en Microsoft Excel o cliente de sincronización OneDrive.
+- **Problema que resuelve**: Los agentes suelen fallar con errores de permisos (`Errno 13` / `Error 32: The process cannot access the file because it is being used by another process`) cuando el usuario mantiene abierto un archivo en Microsoft Excel o cliente de sincronización OneDrive.
 - **Implementación**:
   - **Shared-Read en Memoria**: Bypassea bloqueos exclusivos utilizando llamadas Win32 API (`CreateFileW`) con flags de compartición `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`, leyendo el binario a un buffer `io.BytesIO` sin forzar el cierre del aplicativo cliente.
   - **Detección Atómica de Escritura (`check_write_lock`)**: Verifica la disponibilidad del descriptor antes de persistir, conmutando a archivos temporales de transición (`_temp.xlsx`) si el archivo está en edición activa por el usuario.
@@ -47,7 +52,7 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - **Definición**: Orquestador integral para ingeniería de hardware, carpintería, cerramientos bioclimáticos y dispositivos IoT.
 - **Tríada de Entregables**:
   1. *Gemelo Digital 3D Interactivo* (`interactive-3d-structure`): Modelo espacial autónomo con referencias direccionales y cotas métricas.
-  2. *Cubicación, Sourcing y BOM Veteado* (`quotation-for`): Análisis de merma, optimización de cortes comerciales (piezas de 3.2m / rollos) y comparación de 3 opciones locales (Chile: Mercado Libre, Sodimac, Easy).
+  2. *Cubicación, Sourcing y BOM Veteado* (`quotation-for`): Análisis de merma, optimización de cortes comerciales y comparación de 3 opciones locales.
   3. *Manual de Montaje e Instructivo de Campo* (`generate-html-doc` + `agile-prototype`): Protocolo procedural paso a paso, seguridad EPP, checklist de QA y versionado por Marks (MKI, MKII).
 
 ### 10. Módulo Profundo y Costura Paramétrica en Gemelos Digitales 3D (`interactive-3d-structure`)
@@ -63,19 +68,18 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - **Contrato de Navegación**: Todo documento entregable de un proyecto incorpora una barra superior sticky con identidad gráfica (`.brand`) y botones de acción rápida (`.top-actions`) enlazando directamente al visor 3D, cotización y manual instructivo, garantizando navegación bidireccional inmediata.
 
 ### 13. Habilitación de Invocación Autónoma y Metadatos de Skills
-- **Descubrimiento por Modelos**: Se estandariza la eliminación de la directiva `disable-model-invocation: true` en todas las habilidades activas de `.agents/skills/`. Esto permite que el motor de inferencia de Antigravity descubra e invoque las habilidades autónomamente durante la resolución de tareas.
-- **Metadatos Frontmatter Canónicos**: Todo `SKILL.md` debe mantener definidos de forma estricta los campos `name` (identificador canónico sin espacios) y `description` (resumen imperativo y triggers de activación en lenguaje natural), preservando la compatibilidad universal del catálogo.
+- **Descubrimiento por Modelos**: Se estandariza la eliminación de la directiva `disable-model-invocation: true` en todas las habilidades activas de `.agents/skills/`. Esto permite que el motor de inferencia de cualquier asistente descubra e invoque las habilidades autónomamente durante la resolución de tareas.
+- **Metadatos Frontmatter Canónicos**: Todo `SKILL.md` mantiene definidos de forma estricta los campos `name` (identificador canónico sin espacios) y `description` (resumen imperativo y triggers de activación en lenguaje natural), preservando la compatibilidad universal del catálogo.
 
 ### 14. Motor de Cálculo Determinista para Decisiones Financieras (`finantial-analysis`)
 - **Problema que resuelve**: Los agentes cometen errores aritméticos al calcular VAN, TIR o probabilidades "de cabeza", y comparan ideas bajo varas distintas.
 - **Implementación**: El agente traduce el libro de supuestos a un `modelo.json` declarativo; `scripts/fin_model.py` (solo librería estándar, semilla fija) proyecta flujos mensuales y emite `resultados.json`, `flujos.csv` y `resumen.md`. Ningún número del informe se calcula fuera del script.
 - **Camino de fallo y opción cero**: Cada candidata tiene una probabilidad de superar su criterio de muerte (`p_exito`) en `mes_corte`; si no lo supera, se liquida sin gastar la inversión posterior, lo que premia escalonar la apuesta por Marks. La opción cero (no invertir) compite siempre en el ranking y en P(mejor).
-- **Flujo económico vs. caja**: El tiempo del fundador se costea en el VAN pero no en la exposición de caja, evitando confundir costo de oportunidad con necesidad de capital.
 
 ### 15. Skills Maestras por Herramienta (`study-and-be-a-master-of` → `powerautomate-dev`)
-- **Problema que resuelve**: El agente opina sobre herramientas (Power Automate, Excel, Power BI, 3D) sin llegar al artefacto real ni a fuentes oficiales, y cada sesión re-descubre cómo autenticarse y leerlo.
+- **Problema que resuelve**: El agente opina sobre herramientas sin llegar al artefacto real ni a fuentes oficiales, re-descubriendo en cada sesión cómo autenticarse y leerlo.
 - **Patrón**: Una skill maestra se construye sobre un **espécimen** real del usuario. Primero la **prueba de contacto** (MCP, CLI autenticada como `az`, archivo local); luego la investigación de fuentes primarias a `RESEARCH.md` en segundo plano; un script de solo lectura que convierte el artefacto en **representación textual** (`get`), aplica reglas con fuente (`lint`) y diagnostica; y un `SKILL.md` con Paso 0 Mapa y una rama por verbo, cada una con su criterio de término.
-- **Instalación dual**: La carpeta real vive en `.agents/skills/<nombre>/` (Antigravity) y `scripts/install_skill.py` valida el frontmatter y crea el junction `~/.claude/skills/<nombre>` para que Claude Code la vea de inmediato.
+- **Instalación agnóstica**: La carpeta de la skill vive en `.agents/skills/<nombre>/` y puede ser descubierta directamente por Antigravity o enlazada simbólicamente/junction a cualquier otro asistente (como Claude Code en `~/.claude/skills/`).
 - **Límites de acción**: Leer es libre; encender flujos, reenviar ejecuciones o escribir datos que lleguen a personas o máquinas exige confirmación explícita.
 
 ### 16. Repositorio Central y Compatibilidad Dual de Invocación (`writing-great-skills`)
@@ -88,6 +92,8 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - **Problema que resuelve**: Inserción inadvertida de trailers automatizados (`Co-authored-by: Claude <noreply@anthropic.com>`, firmas de modelos como "hecho con Claude Opus 5.5", "Gemini 3.8 Flash", etc.) que contaminan la trazabilidad y autoría del repositorio.
 - **Implementación**: Guardrail estricto en el empaquetado de commits que prohíbe de manera absoluta cualquier firma, mención de proveedores (Anthropic, Google, OpenAI, etc.), modelos o trailers `Co-authored-by:`, restringiendo el mensaje al formato estándar humano de Conventional Commits (`type(scope): summary`).
 
+---
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.
@@ -95,7 +101,8 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - `.agents/skills/<skill-name>/references/`: Documentos de referencia técnica, guías normativas y fórmulas de soporte para la ejecución de la habilidad.
 - `prototypes/`: Directorio de almacenamiento de prototipos interactivos, gemelos digitales 3D, dossiers técnicos y manuales de montaje HTML.
 - `skills-to-review/`: Directorio de incubación y revisión preliminar para nuevas habilidades antes de su incorporación a `.agents/skills/`.
+- `docs/`: Documentación arquitectónica, metodológica y guías operativas.
 
 ---
 
-Developed by Tata Deli Labs.
+Developed by Tata Deli Labs. Licensed under Apache 2.0.

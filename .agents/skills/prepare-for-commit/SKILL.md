@@ -54,18 +54,29 @@ Prepare the commit command for manual execution.
    ```
    <type>(<scope>): <short summary>
 
-   <optional body>
+   <optional body describing technical changes and architecture delta>
    ```
    *Types*: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.  
    *Scope*: The specific module/domain (e.g., `dispensacion`, `planta`).
 
 > [!CAUTION]
 > **Do NOT run `git add` or `git commit` automatically.** Only output the proposed command in a code block.
+> **Do NOT include any AI attribution, model names, or co-authorship trailers.** The message must remain 100% human-facing and professional.
 
-**Completion criterion**: `git status` output displayed and the proposed conventional commit command printed in a copyable code block.
+**Completion criterion**: `git status` output displayed and the proposed conventional commit command printed in a copyable code block, strictly free of any AI signatures or co-authorship trailers.
 
 ---
 
 ## Guardrails
 - **No draft features**: Do not document experimental or incomplete changes.
 - **No speculation**: Only document verifiable code and designs present in the workspace.
+- **ABSOLUTE PROHIBITION of AI Co-Authorship & Model Trailers**:
+  Under NO circumstances may the commit message include trailers, tags, signatures, or mentions of AI assistants, models, or vendor providers:
+  - ❌ **STRICTLY FORBIDDEN**:
+    - `Co-authored-by: Claude <noreply@anthropic.com>` or any other `Co-authored-by:` line.
+    - Mentions of models: *"hecho con Gemini 3.8 Flash"*, *"hecho con Claude Opus 5.5 (medium)"*, *"GPT-4"*, etc.
+    - Mentions of vendors or platforms: *"Anthropic"*, *"Google"*, *"OpenAI"*, *"Antigravity"*, etc.
+    - Phrases such as *"Generated with..."*, *"Assisted by..."*, *"AI-generated"*, etc.
+  - ✅ **MANDATORY**:
+    - Commit messages must follow standard Conventional Commits (`type(scope): summary`).
+    - The commit body must describe strictly technical business/code rationale.
