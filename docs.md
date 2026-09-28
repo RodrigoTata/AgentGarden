@@ -88,6 +88,17 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
 - **Problema que resuelve**: Inserción inadvertida de trailers automatizados (`Co-authored-by: Claude <noreply@anthropic.com>`, firmas de modelos como "hecho con Claude Opus 5.5", "Gemini 3.8 Flash", etc.) que contaminan la trazabilidad y autoría del repositorio.
 - **Implementación**: Guardrail estricto en el empaquetado de commits que prohíbe de manera absoluta cualquier firma, mención de proveedores (Anthropic, Google, OpenAI, etc.), modelos o trailers `Co-authored-by:`, restringiendo el mensaje al formato estándar humano de Conventional Commits (`type(scope): summary`).
 
+### 18. Desacoplamiento Arquitecto-Worker y Tickets para Inicio en Frío (`execute` & `to-tickets`)
+- **Problema que resuelve**: La disparidad de costo y capacidad cognitiva entre modelos de razonamiento avanzado y modelos ejecutores rápidos. Cuando un modelo ejecutor económico intenta abordar tareas complejas de desarrollo sin diseño previo, sufre de alucinaciones arquitectónicas, deriva en decisiones de diseño no acordadas y contamina el contexto.
+- **Implementación**:
+  - **Modos de Ejecución (`plan`, `build`, `full`)**: `execute` permite la partición estricta de responsabilidades. El arquitecto opera en modo `plan` (pasos 1 y 4) resolviendo todas las decisiones estructurales; el trabajador opera en modo `build` (pasos 2, 3 y 4) ejecutando código y pruebas sobre tickets ya definidos.
+  - **Tickets Preparados para el Trabajador (*Worker-Ready*)**: Los tickets incorporan tres secciones obligatorias:
+    1. *Costuras bajo prueba (`seams under test`)*: Interfaces públicas estandarizadas donde `tdd` debe verificar el comportamiento, eliminando la negociación de costuras durante la codificación.
+    2. *Decisiones (`Decisions`)*: Formas de datos, manejo de errores, nombres canónicos y módulos intervenidos predeterminados.
+    3. *Fuera de alcance (`Out of scope`)*: Límites negativos explícitos sobre lo que el trabajador tiene prohibido modificar o crear.
+  - **Prueba de Inicio en Frío (*Cold-Start Test*)**: Cada ticket se valida de modo que un agente que solo tiene acceso al ticket y al repositorio (sin historial conversacional previo) no enfrente ninguna disyuntiva de diseño.
+  - **Gestión Autónoma de Ambigüedades en Build**: Si un trabajador en modo `build` detecta una decisión de diseño no cubierta o una alteración de interfaz pública, no intenta improvisar: marca el ticket con estado `needs-architect`, anexa la pregunta técnica pendiente y salta de inmediato al siguiente ticket desbloqueado.
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.

@@ -36,6 +36,16 @@ Break the work into **tracer bullet** tickets.
 
 Give each ticket its **blocking edges** — the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
+Give each ticket its **seams under test** — the public interfaces `tdd` will test at. These are the pre-agreed seams `tdd` requires, so implementing the ticket needs no seam negotiation.
+
+**Worker-ready tickets.** When the tickets will be implemented by a different, cheaper agent (the user says so, or `/execute plan` is running), write each one for a worker that starts **cold**: it sees only the ticket and the repo, never this conversation. Each ticket then also carries:
+
+- **Decisions** — every design choice already made: data shapes, error behaviour, names, and the modules and public interfaces touched. This overrides the rule against file paths below — the worker needs the map.
+- **Test list** — the behaviours to drive red, in order.
+- **Out of scope** — what the worker must not touch or add.
+
+A worker-ready ticket passes the **cold-start test**: a worker reading only the ticket and the repo would face no design decision.
+
 **Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change — rename a column, retype a shared symbol — whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket — green is promised only there.
 
 ### 4. Quiz the user
@@ -75,8 +85,12 @@ Do NOT close or modify any parent issue.
 
 **Status:** ready-for-agent
 
+**Seams under test:** the public interfaces the tests drive.
+
 - [ ] Acceptance criterion 1
 - [ ] Acceptance criterion 2
+
+Worker-ready tickets add `**Decisions:**`, `**Test list:**` and `**Out of scope:**` here.
 
 </local-ticket-template>
 
@@ -95,10 +109,16 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 - [ ] Criterion 1
 - [ ] Criterion 2
 
+## Seams under test
+
+The public interfaces the tests drive.
+
 ## Blocked by
 
 - A reference to each blocking ticket, or "None — can start immediately".
 
+Worker-ready tickets add `## Decisions`, `## Test list` and `## Out of scope` sections.
+
 </issue-template>
 
-In either form, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+In either form, avoid specific file paths or code snippets — they go stale fast (worker-ready tickets excepted, above). Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.

@@ -1,41 +1,69 @@
 ---
 name: execute
-description: Execute a PRD or plan end-to-end autonomously. Runs to-tickets, tdd, and to-qa in sequence without human intervention.
+description: Executes a PRD, spec, idea or bug end-to-end autonomously through to-tickets, tdd and to-qa, or one half of that split between an architect agent and a worker agent. Use when the user asks to execute a plan, to prepare tickets for a worker agent (plan), or to have a worker build ready tickets (build).
 ---
 
 # Execute
 
-Drive an implementation plan or PRD to completion autonomously. This is a **relentless** workflow: it forces underlying skills to skip their human-review gates and runs end-to-end until the final QA phase.
+Drive work from a PRD, spec, idea or bug to QA'd code. This is a **relentless** workflow: it overrides the human-review gates of the skills it runs and does not stop until its mode's last step.
+
+## Modes
+
+The pipeline can run in one agent, or be split between an **architect** (the stronger model, which makes every design decision) and a **worker** (the cheaper model, which only executes them). The tickets are the handoff between the two.
+
+| Mode    | Who       | Steps         | Stops after                 |
+| ------- | --------- | ------------- | --------------------------- |
+| `plan`  | architect | 1, 4          | Tickets published           |
+| `build` | worker    | 2, 3, 4       | QA artifacts generated      |
+| `full`  | one agent | 1, 2, 3, 4    | QA artifacts generated      |
+
+Take the mode from the first argument. With no mode given: if the input is existing tickets (a `.scratch/<feature-slug>/` path or tracker reference), run `build`; otherwise run `full`.
 
 ## Process
 
-### 1. Breakdown (`to-tickets`)
+### 1. Breakdown (`to-tickets`) — `plan`, `full`
 
-Read the provided plan, PRD, or specification and apply the `to-tickets` skill to break it into tracer-bullet vertical slices.
-**Override**: Skip the "Quiz the user" step. Draft the slices and immediately publish them to the configured tracker (or local files).
-*Completion criterion*: Every ticket is published to the tracker and has its blocking edges defined.
+Read the input and apply the `to-tickets` skill.
+**Override**: Skip the "Quiz the user" step. Draft the slices and publish them immediately.
 
-### 2. Implementation (`tdd`)
+In `plan` mode, write **worker-ready tickets** as `to-tickets` defines them.
 
-Work the ticket frontier. For every ticket whose blockers are resolved, apply the `tdd` skill (red → green loop).
-**Override**: Do not ask for human feedback between tickets. When a ticket is green and verified, immediately pick up the next ready ticket. If ambiguity arises, make the best technical decision, document it, and keep moving.
-*Completion criterion*: Every ticket in the breakdown is implemented, and the test suite remains green.
+*Completion criterion*: Every ticket is published with its blocking edges and seams under test. In `plan` mode, additionally: every ticket passes the `to-tickets` **cold-start test**. Then skip to step 4, and end by handing the user the command for the worker: `/execute build <feature-slug or tracker reference>`.
 
-### 3. Verification (`to-qa`)
+### 2. Implementation (`tdd`) — `build`, `full`
 
-Once the board is clear and all implementations are finished, apply the `to-qa` skill.
-Run the automated QA checks and prepare the human testing plan. 
-*Completion criterion*: The `qa_agent_report.md` and `qa_human_plan.md` artifacts are generated, and you explicitly stop to present the final outcome to the user for human review.
+In `build` mode, load the tickets from the given reference; without one, use the `.scratch/*/issues/` folder holding `ready-for-agent` tickets. Read every ticket before starting.
 
-### 4. Logging (`execute-log`)
+Work the frontier: for every ticket whose blockers are done, apply the `tdd` skill (red → green loop).
+**Override**: The seams come from the ticket's Seams under test — do not ask. Do not ask for human feedback between tickets. When a ticket is green, set its Status to `done` and pick up the next ready ticket.
 
-Before presenting the final outcome to the user for human review, you **MUST** log the execution details.
-Append a new entry to the log file located at `c:\dev\AgentGarden\Logs\execute-log.md`. If the directory or file does not exist, create it.
-The log entry must include:
-- Date and time
-- Project reference (the workspace/repository you were working on)
-- Complexity (a brief assessment of the implementation complexity)
-- Execution time (approximate duration of the `/execute` process)
-- Tokens spent (approximate input and output tokens used during the execution)
+When a ticket leaves something undecided:
 
-You can use the PowerShell `Add-Content` command or similar to append to the file efficiently.
+- **`full`** — make the best technical decision, record it in the ticket, keep moving.
+- **`build`** — design belongs to the architect. Implementation details inside the ticket's decisions are yours; anything that would change a public interface, a behaviour, or the scope is not. Set the ticket's Status to `needs-architect`, append the open question to it, and move to the next ready ticket. Tickets it blocks stay blocked.
+
+*Completion criterion*: Every ticket is `done` or `needs-architect`, and the test suite is green.
+
+### 3. Verification (`to-qa`) — `build`, `full`
+
+Apply the `to-qa` skill: run the automated QA checks and prepare the human testing plan. List every `needs-architect` ticket, with its question, as open work in the agent report.
+
+*Completion criterion*: `qa_agent_report.md` and `qa_human_plan.md` exist, and zero `🔴 CRITICAL` findings remain unfixed.
+
+### 4. Logging — every mode
+
+Before presenting the outcome, append one entry to `c:\dev\AgentGarden\Logs\execute-log.md` (create it if missing), written as UTF-8:
+
+```markdown
+## [YYYY-MM-DD HH:MM] — <short title>
+- **Mode:** plan | build | full
+- **Model:** <the model running this session>
+- **Project Reference:** <workspace/repository and feature slug>
+- **Complexity:** <Low | Medium | High — one-line reason>
+- **Execution Time:** ~<minutes>
+- **Tokens Spent:** ~<approximate input + output>
+- **Tickets:** <NN-slug — status, one per line>
+- **Outcome:** <tests passing, QA result, or tickets handed to the worker>
+```
+
+*Completion criterion*: The entry is appended, then stop and present the outcome to the user for human review.

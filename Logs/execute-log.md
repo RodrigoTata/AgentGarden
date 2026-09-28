@@ -324,3 +324,19 @@ pm run build). Backend mantiene 111/111 tests en verde.
   - Lint, build y `npm audit --omit=dev` limpios (0 vulnerabilidades).
   - Prueba manual en Docker localhost: migraciones, seed demo y simulador HTTP/MQTT.
   - Tickets en testing-qa; artifacts `qa_agent_report.md` y `qa_human_plan.md` generados.
+
+## Execution Log - 2026-09-27 22:32
+- **Project Reference:** Posca (MKII — wayfinder tickets 17 and 18, branch `feat/vertex-gemini`, PR https://github.com/RodrigoTata/Posca/pull/1)
+- **Task Description:** Moved Posca's language model from OpenRouter to Gemini 3.1 Flash-Lite on Vertex AI (ADR 0004, amended: one provider via `LLM_PROVIDER`, no automatic fallback). Includes:
+  - `VertexInterpreter` sharing one Chat Completions adapter with OpenRouter; ADC token cached by `GoogleAccessToken`.
+  - Settings per provider; `build_interpreter`; `smoke_llm.py`.
+  - `scripts/posca-shell.sh` (isolated gcloud/ADC, ADR 0003) and a guard in the cloud scripts.
+  - `provision_gcp.sh`: Vertex AI + `aiplatform.user`, $10 budget before credits (50/90/100 %), OpenRouter secret only on demand.
+  - `deploy.sh` provider-aware; docs, owner checklist and tickets updated.
+- **Complexity:** Media (2 tickets verticales; adaptador HTTP nuevo, seam de settings, scripts bash probados con un gcloud falso; incertidumbre externa sobre el ID del modelo, reasoning_effort y los flags de budgets).
+- **Execution Time:** ~1.5 horas (incluye 12 ciclos rojo → verde y QA)
+- **Tokens Spent:** ~450.000 tokens de entrada acumulados en ventana de contexto y ~45.000 de salida (estimado)
+- **Status:** GREEN
+  - Pruebas: 127 aprobadas, 11 omitidas (contrato Firestore sin emulador); antes 103.
+  - `bash -n`, secret scan y `pip-audit` limpios.
+  - Artifacts `.scratch/vertex-gemini/qa_agent_report.md` (0 🔴, 5 🟡 sólo verificables en GCP real) y `qa_human_plan.md` (6 escenarios) generados.

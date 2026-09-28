@@ -11,6 +11,8 @@ Auth: Azure CLI (`az login` once). Read-only: this script never writes to a flow
 """
 import json, os, re, subprocess, sys, urllib.request, urllib.error, urllib.parse
 from collections import Counter
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 AZ = os.environ.get("AZ_PATH") or (r"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" if os.name == "nt" else "az")
 FLOW_API = "https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/{env}/flows/{flow}"

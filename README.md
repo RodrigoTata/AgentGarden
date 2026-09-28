@@ -103,7 +103,7 @@ LICENSE                                           # Licencia Apache 2.0
 | **domain-modeling** | Definición del modelo de dominio, lenguaje ubicuo y decisiones de arquitectura (ADRs). |
 | **entity-diagram-analysis** | Generación de diagramas Entidad-Relación en HTML interactivo separados por regiones para aislar el análisis y producir un resumen de arquitectura. |
 | **excel-assist** | Auditoría, normalización, validación de datos, semáforos ejecutivos y modificación segura de libros Excel (.xlsx) con acceso compartido Win32 y living-reports. |
-| **execute** | Ejecución autónoma de PRDs/planes encadenando `to-tickets`, `tdd` y `to-qa` sin intervención humana (con registro de ejecución). |
+| **execute** | Ejecución autónoma de PRDs, specs o bugs de punta a punta (`full`) o particionada entre agente arquitecto (`plan`) y trabajador (`build`) mediante `to-tickets`, `tdd` y `to-qa` con registro de ejecución. |
 | **finantial-analysis** | Comparación financiera de ideas, proyectos o prototipos para decidir cuál implementar: motor determinista (VAN, TIR, payback, exposición de caja, Monte Carlo con camino de fallo, tornado y valores de quiebre) contra la opción cero, con veredicto y criterio de muerte. |
 | **frontend-analysis** | Análisis y mapeo de interfaces complejas (Cockpit / Digital Twin) generando guías visuales en HTML. |
 | **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes) con motor Dual-Theme (Modo Noche/Claro) y cabecera interconectada. |
@@ -127,7 +127,7 @@ LICENSE                                           # Licencia Apache 2.0
 | **teach** | Flujos educativos, rutas de aprendizaje, misiones y registros de avance. |
 | **to-qa** | Verificaciones de QA automatizado y planificación de pruebas manuales. |
 | **to-spec** | Transformación de requerimientos o ideas en especificaciones técnicas detalladas (PRD/Spec). |
-| **to-tickets** | Desglose de especificaciones en tareas, tickets e issues accionables. |
+| **to-tickets** | Desglose de especificaciones en vertical slices trazadoras con costuras de prueba preacordadas (*seams under test*) y especificación de tickets preparados para ejecución en frío (*worker-ready*) con decisiones cerradas. |
 | **wayfinder** | Mapeo y gestión de iniciativas complejas divididas en mapas de tickets de decisión. |
 | **web-audit** | Auditoría y análisis completo de sitios web. |
 | **writing-great-skills** | Guía de buenas prácticas y vocabulario para redactar skills predecibles, incorporando el patrón de UI Dual-Theme. |
