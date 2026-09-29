@@ -99,6 +99,21 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
   - **Prueba de Inicio en Frío (*Cold-Start Test*)**: Cada ticket se valida de modo que un agente que solo tiene acceso al ticket y al repositorio (sin historial conversacional previo) no enfrente ninguna disyuntiva de diseño.
   - **Gestión Autónoma de Ambigüedades en Build**: Si un trabajador en modo `build` detecta una decisión de diseño no cubierta o una alteración de interfaz pública, no intenta improvisar: marca el ticket con estado `needs-architect`, anexa la pregunta técnica pendiente y salta de inmediato al siguiente ticket desbloqueado.
 
+### 19. Tablero Kanban Sincronizado y Renderizado Declarativo (`create-kanban`)
+- **Problema que resuelve**: La fragmentación de la gestión de requerimientos y tareas. Los tableros SaaS externos (Jira, Trello, Planner) introducen fricción de sincronización para los agentes, mientras que los archivos Markdown estáticos son difíciles de auditar visualmente por los usuarios humanos.
+- **Implementación**:
+  - **Fuente Única de Verdad en Markdown (`BOARD.md`)**: El backlog reside enteramente en el repositorio como archivos Markdown legibles y editables por agentes, con metadatos de configuración (`<!-- kanban: ... -->`), buzones por área (`inbox/`) y plantillas estándar (`_TEMPLATE.md`).
+  - **Renderizador Determinista a HTML (`render_board.py`)**: Script autónomo en Python (sin dependencias externas) que compila `BOARD.md` en un dashboard interactivo `BOARD.html` estilo Notion con vistas de Tablero/Tabla, conmutador de tema claro/oscuro, filtros por área/prioridad y soporte de impresión apaisada.
+  - **Prueba de Guardia y Cero Deriva (`test_board_html.py`)**: Test automatizado que verifica en CI que `BOARD.html` esté estrictamente sincronizado con `BOARD.md`, impidiendo discrepancias entre el estado de las tareas y el entregable visual.
+  - **Interconexión con la Guía de Usuario**: Integración bidireccional mediante enlaces de barra superior (`.top-actions`), vinculando el manual interactivo del repositorio con su tablero operativo.
+
+### 20. Árbol de Diseño por Rondas y Preguntas en la Frontera (`grilling`)
+- **Problema que resuelve**: Las entrevistas de estrés y refinamiento de planes suelen divagar, asumir implícitamente decisiones clave o formular preguntas cuyas dependencias lógicas aún no están resueltas, trasladando además la carga de investigar hechos del entorno al usuario.
+- **Implementación**:
+  - **Mapeo del Espacio de Diseño como Árbol**: Las decisiones se modelan como un grafo donde cada disyuntiva se bifurca en ramas dependientes.
+  - **Procesamiento de la Frontera por Rondas**: En cada ciclo se calcula la frontera de decisiones activas (aquellas cuyos prerrequisitos están completamente acordados). El agente expone todas las preguntas de la frontera en una única ronda numerada, acompañando cada una de su respuesta recomendada con justificación técnica.
+  - **Separación Estricta de Hechos y Decisiones**: La recopilación de hechos (inspección de archivos, herramientas, código) se resuelve de forma 100% autónoma por el agente mediante sub-agentes o herramientas nativas; las decisiones estratégicas o de arquitectura se reservan exclusivamente para el usuario.
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.

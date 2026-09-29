@@ -22,6 +22,7 @@ Colección modular de habilidades (*skills*) y recursos estandarizados de uso ge
     ├── codebase-design/
     ├── context-compactor/
     ├── context-extractor/
+    ├── create-kanban/
     ├── cyber-audit/
     ├── debug/
     ├── devsecops-review/
@@ -35,6 +36,7 @@ Colección modular de habilidades (*skills*) y recursos estandarizados de uso ge
     ├── generate-html-doc/
     ├── grill-me-rg/
     ├── grill-with-docs/
+    ├── grilling/
     ├── handoff/
     ├── implementation-plan/
     ├── improve-codebase-architecture/
@@ -96,6 +98,7 @@ LICENSE                                           # Licencia Apache 2.0
 | **codebase-design** | Vocabulario y patrones para el diseño de módulos profundos e interfaces limpias. |
 | **context-compactor** | Compactación del historial de conversación en puntos de control minimalistas. |
 | **context-extractor** | Extracción y digestión estructurada de documentos binarios (PDF, Excel, Word, PPT, CSV) a un almacén RAG local optimizado en tokens. |
+| **create-kanban** | Andamiaje de tablero Kanban en Markdown (`BOARD.md`) con archivos por ítem, buzones por área y renderizado a HTML estilo Notion sincronizado mediante pruebas. |
 | **cyber-audit** | Auditorías de seguridad y listas de verificación de vulnerabilidades. |
 | **debug** | Triaje y diagnóstico de errores reportados en lenguaje natural. |
 | **devsecops-review** | Verificaciones de seguridad DevSecOps y reporte en formato HTML + Markdown. |
@@ -109,6 +112,7 @@ LICENSE                                           # Licencia Apache 2.0
 | **generate-html-doc** | Generación de documentos HTML estructurados e interactivos (instructivos, guías, manuales, reportes) con motor Dual-Theme (Modo Noche/Claro) y cabecera interconectada. |
 | **grill-me-rg** | Entrevista interactiva para afinar planes y resolver decisiones de diseño. |
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
+| **grilling** | Entrevista implacable al usuario para someter a estrés ideas, planes o decisiones mapeando un árbol de diseño por rondas en la frontera. |
 | **handoff** | Compactación de la sesión en un documento de traspaso para continuidad entre agentes. |
 | **implementation-plan** | Diseño de planes de implementación des-riesgados con costuras arquitectónicas, diseño de verificación y gate de aprobación de usuario. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
