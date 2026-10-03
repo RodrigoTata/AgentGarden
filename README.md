@@ -14,6 +14,7 @@ Colección modular de habilidades (*skills*) y recursos estandarizados de uso ge
 .agents/
 ├── rules/
 └── skills/
+    ├── 3d-scanner/
     ├── agile-prototype/
     ├── audit-me/
     ├── bpmn-diagram/
@@ -114,6 +115,7 @@ LICENSE                                           # Licencia Apache 2.0
 | **grill-with-docs** | Entrevista intensiva de diseño generando ADRs y glosario en el proceso. |
 | **grilling** | Entrevista implacable al usuario para someter a estrés ideas, planes o decisiones mapeando un árbol de diseño por rondas en la frontera. |
 | **handoff** | Compactación de la sesión en un documento de traspaso para continuidad entre agentes. |
+| **3d-scanner** | Escaneo de objetos y espacios físicos desde fotos hacia un gemelo digital 3D: lectura con visión (lupa con grilla y rectificación de perspectiva sobre una cara de medidas conocidas), pregunta al humano solo lo que la foto no entrega, trazabilidad de la fuente de cada medida (`medido`, `foto ✓`, `foto`, `catálogo`, `supuesto`) y contraste del modelo contra cada foto. Construye con `interactive-3d-structure`. |
 | **implementation-plan** | Diseño de planes de implementación des-riesgados con costuras arquitectónicas, diseño de verificación y gate de aprobación de usuario. |
 | **improve-codebase-architecture** | Evaluación y propuestas de mejora para la arquitectura del sistema. |
 | **interactive-3d-structure** | Generación de gemelos digitales y estructuras 3D interactivas en Three.js con costura declarativa, cotas, brújula cardinal y escala humana. |

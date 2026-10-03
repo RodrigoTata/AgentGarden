@@ -114,6 +114,14 @@ Cada directorio de habilidad contiene de forma obligatoria un archivo principal 
   - **Procesamiento de la Frontera por Rondas**: En cada ciclo se calcula la frontera de decisiones activas (aquellas cuyos prerrequisitos están completamente acordados). El agente expone todas las preguntas de la frontera en una única ronda numerada, acompañando cada una de su respuesta recomendada con justificación técnica.
   - **Separación Estricta de Hechos y Decisiones**: La recopilación de hechos (inspección de archivos, herramientas, código) se resuelve de forma 100% autónoma por el agente mediante sub-agentes o herramientas nativas; las decisiones estratégicas o de arquitectura se reservan exclusivamente para el usuario.
 
+### 21. Escaneo por Fotos con Trazabilidad de Medidas y Contraste por Cámara (`3d-scanner`)
+- **Problema que resuelve**: Una foto entrega forma y proporciones, pero no escala ni profundidad. Estimar medidas a ojo, o mezclarlas con las dadas por el usuario sin distinguirlas, produce gemelos que parecen exactos sin serlo.
+- **Implementación**:
+  - **Fuente por medida**: Cada número del inventario lleva exactamente una fuente (`medido`, `foto ✓` confirmada por el usuario, `foto` con ±10 %, `catálogo`, `supuesto`), que se copia a la `nota` de la pieza y a los avisos del visor. Si un `medido` contradice una estimación `foto` en más de 15 %, se revisa la lectura de esa foto.
+  - **Ancla y rectificación** (`scripts/lupa.mjs`, `scripts/rectificar.mjs`): Los píxeles se leen en recortes ampliados con grilla en coordenadas de la foto original y se convierten a mm con una homografía de 4 puntos sobre una cara de medidas conocidas. La línea de control compara la razón alto/ancho en píxeles con la real y marca ⚠ sobre 5 %, lo que detecta esquinas mal leídas antes de medir.
+  - **Preguntas en la frontera**: Los huecos (profundidad, caras ocultas, interior, calces) se preguntan en un solo mensaje, ordenados, con la letra del recorrido y la estimación del agente para que confirmar sea rápido.
+  - **Contraste por foto** (`scripts/contraste.mjs`): Arma una variante temporal del visor con la cámara de cada foto y sin las capas que esa foto no muestra, la verifica con `verify.mjs` de `interactive-3d-structure` y deja la captura para compararla. Ante una diferencia se sospecha primero de la cámara y solo después del SPEC.
+
 ## Estructura de Directorios
 
 - `.agents/skills/`: Directorio raíz de almacenamiento de todas las habilidades disponibles y activas en el repositorio.
